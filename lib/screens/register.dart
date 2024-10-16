@@ -1,7 +1,7 @@
 // register_screen.dart
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart'; // Import the custom button
-import 'login.dart';
+import 'login.dart'; // Make sure this matches your actual login screen file
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -42,8 +42,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
-        title: const Text('Register', style: TextStyle(color: Colors.white)),
+        title: const Text('Register', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white), // Set back button color to white
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

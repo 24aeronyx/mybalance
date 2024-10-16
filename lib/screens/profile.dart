@@ -6,6 +6,7 @@ import '../screens/main_screen.dart';
 import '../screens/edit_profile.dart'; // Import for navigation to EditProfileScreen
 import '../screens/forgot_password.dart';
 import '../screens/about.dart'; // Import for About App screen
+import '../screens/login.dart'; // Import for LoginScreen
 
 class ProfileScreen extends StatelessWidget {
   final String username = "Ariel Zakly Pratama";
@@ -141,7 +142,12 @@ class ProfileScreen extends StatelessWidget {
                   icon: Icons.logout,
                   iconColor: const Color.fromRGBO(0, 74, 173, 1),
                   onTap: () {
-                    // Add your logout logic here
+                    // Add logout logic here (if any)
+                    // Navigate to LoginScreen when Logout is clicked
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
                   },
                 ),
               ],

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart'; // Import the custom button
 import 'main_screen.dart'; // Import MainScreen
+import 'register.dart'; // Import RegisterScreen directly
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -99,7 +100,11 @@ class _LoginScreenState extends State<LoginScreen> {
               // Navigate to Register
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/register'); // Assuming you're using named routes
+                  // Navigate directly to RegisterScreen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
                 },
                 child: const Text('Don\'t have an account? Register here'),
               ),
