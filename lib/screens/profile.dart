@@ -4,6 +4,7 @@ import '../widgets/summary_card.dart';
 import '../widgets/menu_option.dart';
 import '../screens/main_screen.dart';
 import '../screens/edit_profile.dart'; // Import untuk navigasi ke MainScreen
+import '../screens/forgot_password.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String username = "Ariel Zakly Pratama";
@@ -114,7 +115,13 @@ class ProfileScreen extends StatelessWidget {
                   title: 'Forgot Password',
                   icon: Icons.lock,
                   iconColor: const Color.fromRGBO(0, 74, 173, 1),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgotPasswordScreen()),
+                    );
+                  },
                 ),
                 MenuOption(
                   title: 'About App',
