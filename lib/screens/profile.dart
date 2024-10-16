@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import '../widgets/summary_card.dart';
 import '../widgets/menu_option.dart';
 import '../screens/main_screen.dart';
-import '../screens/edit_profile.dart'; // Import untuk navigasi ke MainScreen
+import '../screens/edit_profile.dart'; // Import for navigation to EditProfileScreen
 import '../screens/forgot_password.dart';
+import '../screens/about.dart'; // Import for About App screen
 
 class ProfileScreen extends StatelessWidget {
   final String username = "Ariel Zakly Pratama";
   final String email = "arielpratama9182@gmail.com";
   final String phoneNumber = "085389899996";
-  final double totalIncome = 5440000.00; // Contoh total income
-  final double totalExpense = 2209000.00; // Contoh total expense
+  final double totalIncome = 5440000.00; // Example total income
+  final double totalExpense = 2209000.00; // Example total expense
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Navigasi ke MainScreen saat tombol kembali ditekan
+            // Navigate to MainScreen when back button is pressed
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -127,13 +128,21 @@ class ProfileScreen extends StatelessWidget {
                   title: 'About App',
                   icon: Icons.info,
                   iconColor: const Color.fromRGBO(0, 74, 173, 1),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AboutAppScreen()),
+                    );
+                  },
                 ),
                 MenuOption(
                   title: 'Logout',
                   icon: Icons.logout,
                   iconColor: const Color.fromRGBO(0, 74, 173, 1),
-                  onTap: () {},
+                  onTap: () {
+                    // Add your logout logic here
+                  },
                 ),
               ],
             ),
