@@ -6,13 +6,13 @@ import '../widgets/shortcut_buttons.dart';
 import '../widgets/latest_transactions_section.dart';
 import '../widgets/transaction_list.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+class HomeScreen extends StatelessWidget {
+  final Function navigateToHistory; // Callback function for navigation
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<Transaction> transactions = [
+  HomeScreen({Key? key, required this.navigateToHistory}) : super(key: key);
+
+  // Sample transactions
+  final List<Transaction> transactions = [
     Transaction(
       title: 'Salary',
       amount: 1000000.0,
@@ -50,18 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
-  void _addIncome() {
-    print('Add Income');
-  }
-
-  void _addExpense() {
-    print('Add Expense');
-  }
-
-  void _viewMoreTransactions() {
-    print('View More Transactions');
-  }
-
   double get totalBalance {
     double totalIncome = transactions
         .where((transaction) => !transaction.isExpense)
@@ -81,10 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return formatter.format(amount);
   }
 
+  void _addIncome() {
+    print('Add Income');
+  }
+
+  void _addExpense() {
+    print('Add Expense');
+  }
+
+  void _viewMoreTransactions() {
+    navigateToHistory(); // Call the callback function to navigate
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Warna background halaman
+      backgroundColor: Colors.white, // Background color of the screen
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
         elevation: 0,
@@ -129,13 +129,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             BalanceSection(
-                totalBalance: totalBalance, formatCurrency: formatCurrency),
+              totalBalance: totalBalance,
+              formatCurrency: formatCurrency,
+            ),
             ShortcutButtons(
               addIncome: _addIncome,
               addExpense: _addExpense,
             ),
             LatestTransactionsSection(
-              viewMore: _viewMoreTransactions,
+              viewMore: _viewMoreTransactions, // Pass the view more function
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; // Pastikan sudah mengimpor HomeScreen
-import 'history.dart'; // Pastikan sudah mengimpor HistoryScreen
-import 'reports.dart'; // Pastikan sudah mengimpor ReportsPage
+import 'home.dart'; // Ensure HomeScreen is imported
+import 'history.dart'; // Ensure HistoryScreen is imported
+import 'reports.dart'; // Ensure ReportsPage is imported
 import 'profile.dart';
 import 'edit_profile.dart';
 import '../widgets/navbar.dart';
@@ -15,15 +15,27 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  
+  late List<Widget> _pages; // Declare the pages list
 
-  // List of pages to navigate between
-  final List<Widget> _pages = [
-    HomeScreen(),
-    ReportsPage(),
-    HistoryScreen(),
-    ProfileScreen(),
-    EditProfileScreen()
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomeScreen(navigateToHistory: _navigateToHistory), // Pass the navigation callback
+      ReportsPage(),
+      HistoryScreen(),
+      ProfileScreen(),
+      EditProfileScreen(),
+    ];
+  }
+
+  // Function to navigate to the HistoryScreen
+  void _navigateToHistory() {
+    setState(() {
+      _selectedIndex = 2; // Set the index to the HistoryScreen
+    });
+  }
 
   // Function to handle bottom navigation item taps
   void _onNavBarTapped(int index) {
