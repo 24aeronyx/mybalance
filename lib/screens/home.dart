@@ -5,12 +5,19 @@ import '../widgets/balance_section.dart';
 import '../widgets/shortcut_buttons.dart';
 import '../widgets/latest_transactions_section.dart';
 import '../widgets/transaction_list.dart';
+import '../screens/add_expense.dart';
+import '../screens/add_income.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final Function navigateToHistory; // Callback function for navigation
 
   HomeScreen({Key? key, required this.navigateToHistory}) : super(key: key);
 
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   // Sample transactions
   final List<Transaction> transactions = [
     Transaction(
@@ -70,15 +77,37 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _addIncome() {
-    print('Add Income');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddIncomeScreen(
+          onAddIncome: (Transaction income) {
+            setState(() {
+              transactions.add(income); // Add new income to the list
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void _addExpense() {
-    print('Add Expense');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddExpenseScreen(
+          onAddExpense: (Transaction expense) {
+            setState(() {
+              transactions.add(expense); // Add new expense to the list
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void _viewMoreTransactions() {
-    navigateToHistory(); // Call the callback function to navigate
+    widget.navigateToHistory(); // Call the callback function to navigate
   }
 
   @override
@@ -125,7 +154,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+      body: SingleChildScrollView(
+        // Wrap the Column with SingleChildScrollView
         child: Column(
           children: [
             BalanceSection(
