@@ -14,6 +14,7 @@ class CustomBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.white, // Set the background color to white
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: _buildNavItem(Icons.home, 0),
