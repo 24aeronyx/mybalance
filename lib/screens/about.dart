@@ -15,46 +15,46 @@ class AboutAppScreen extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding:  EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+             Text(
               'About This App',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16.0),
-            const Text(
+             SizedBox(height: 16.0),
+             Text(
               'This app is designed to help users with legal consultations, providing information and resources related to criminal law. Our goal is to make legal assistance accessible and straightforward.',
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 20.0),
-            const Text(
+             SizedBox(height: 20.0),
+             Text(
               'Features:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8.0),
-            const Text(
+             SizedBox(height: 8.0),
+             Text(
               '- Chatbot for legal consultation\n'
               '- User-friendly interface\n'
               '- Access to legal resources\n'
               '- Profile management\n',
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 20.0),
-            const Text(
+             SizedBox(height: 20.0),
+             Text(
               'Contact Us:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8.0),
-            const Text(
+             SizedBox(height: 8.0),
+             Text(
               'Email: support@yourapp.com\n'
               'Phone: +123456789\n',
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 20.0),
-            const Text(
+             SizedBox(height: 20.0),
+             Text(
               'Version: 1.0.0',
               style: TextStyle(fontSize: 16),
             ),

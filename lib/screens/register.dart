@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   // Username TextField
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Username',
                       border: OutlineInputBorder(),
                       filled: true,
@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 20.0),
                   // Email TextField
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(),
                       filled: true,
@@ -112,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 20.0),
                   // Password TextField
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(),
                       filled: true,

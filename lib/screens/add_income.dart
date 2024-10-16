@@ -23,13 +23,32 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         title: _selectedCategory,
         amount: amount,
         isExpense: false,
-        icon: Icons.monetization_on, // You can change this based on category
+        icon: _getCategoryIcon(_selectedCategory), // Get the appropriate icon based on category
         date: _selectedDate ?? DateTime.now(),
       );
 
       widget.onAddIncome(newIncome);
       Navigator.pop(context); // Go back after adding income
     }
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'Salary':
+        return Icons.monetization_on;
+      case 'Business':
+        return Icons.business;
+      case 'Gift':
+        return Icons.card_giftcard;
+      case 'Other':
+        return Icons.category;
+      default:
+        return Icons.category;
+    }
+  }
+
+  Color _getCategoryIconColor(String category) {
+    return Color.fromRGBO(0, 74, 173, 1); // Set the icon color to blue
   }
 
   void _selectDate() async {
@@ -40,9 +59,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       lastDate: DateTime(2101),
     );
 
-    if (pickedDate != null && pickedDate != _selectedDate) {
+    if (pickedDate != null) {
       setState(() {
-        _selectedDate = pickedDate;
+        _selectedDate = pickedDate; // Update the selected date
       });
     }
   }
@@ -54,13 +73,13 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         title: const Text(
           'Add Income',
           style: TextStyle(
-            color: Colors.white, // Change the title text color to white
-            fontWeight: FontWeight.bold, // Make the title bold
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true, // Center the title
+        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
-        iconTheme: const IconThemeData(color: Colors.white), // Change the icon color to white
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,7 +108,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     .map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,
-                    child: Text(category),
+                    child: Row(
+                      children: [
+                        Icon(
+                          _getCategoryIcon(category), // Display category icon
+                          color: _getCategoryIconColor(category), // Set icon color to blue
+                        ),
+                        const SizedBox(width: 8),
+                        Text(category),
+                      ],
+                    ),
                   );
                 }).toList(),
                 decoration: const InputDecoration(
@@ -103,32 +131,36 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _selectedDate == null
+              GestureDetector(
+                onTap: _selectDate,
+                child: TextFormField(
+                  readOnly: true, // Make the field read-only
+                  decoration: const InputDecoration(
+                    labelText: 'Date',
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.calendar_today, color: Color.fromRGBO(0, 74, 173, 1)), // Change calendar icon color to blue
+                  ),
+                  controller: TextEditingController(
+                    text: _selectedDate == null
                         ? 'No date chosen!'
-                        : 'Selected date: ${_selectedDate!.toLocal()}'.split(' ')[0],
+                        : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}', // Show the selected date
                   ),
-                  TextButton(
-                    onPressed: _selectDate,
-                    child: const Text(
-                      'Choose Date',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  onTap: _selectDate,
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
                 child: const Text(
                   'Add Income',
-                  style: TextStyle(color: Colors.white), // Change button text color to white
+                  style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
+                  minimumSize: const Size(double.infinity, 50), // Full-width button
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0), // Rounded corners
+                  ),
                 ),
               ),
             ],

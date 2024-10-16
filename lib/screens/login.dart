@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // Navigate to MainScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
+        MaterialPageRoute(builder: (context) => const MainScreen()),
       );
     }
   }
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   // Email TextField
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(),
                       filled: true,
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 20.0),
                   // Password TextField
                   TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(),
                       filled: true,

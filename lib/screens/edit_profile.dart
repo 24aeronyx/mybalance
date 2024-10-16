@@ -63,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               // Username TextField
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -81,7 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               // Email TextField
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                   filled: true,
@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               // Phone Number TextField
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                   filled: true,

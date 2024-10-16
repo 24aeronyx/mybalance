@@ -54,7 +54,7 @@ class _ReportsPageState extends State<ReportsPage> {
     double position = index * 100.0; // Adjust this value based on your item height
     _scrollController.animateTo(
       position,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -109,9 +109,9 @@ class _ReportsPageState extends State<ReportsPage> {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
+            const Text(
               'Select Year:',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             DropdownButton<int>(
@@ -131,9 +131,9 @@ class _ReportsPageState extends State<ReportsPage> {
               },
             ),
             const SizedBox(height: 20),
-            Text(
+            const Text(
               'Select Month:',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             SingleChildScrollView(
