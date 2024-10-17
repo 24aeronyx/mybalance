@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../widgets/summary_card.dart'; // Import the summary card widget
-import '../widgets/reports_chart.dart'; // Import the chart widget
-import '../screens/main_screen.dart'; // Import your HomeScreen
+import '../widgets/summary_card.dart';
+import '../widgets/reports_chart.dart';
+import '../screens/main_screen.dart';
 
 class ReportsPage extends StatefulWidget {
   const ReportsPage({super.key});
@@ -15,21 +15,10 @@ class _ReportsPageState extends State<ReportsPage> {
   String selectedMonth = 'November';
   int selectedYear = DateTime.now().year;
   final List<String> months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  // List of years, for example from 2020 to the current year
   List<int> years = List.generate(5, (index) => DateTime.now().year - index);
   final ScrollController _scrollController = ScrollController();
 
@@ -38,22 +27,20 @@ class _ReportsPageState extends State<ReportsPage> {
     'December': [2500000, 2000000, 1500000, 2800000],
   };
 
-  double totalIncome = 5440000.00; // Example total income
-  double totalExpense = 2209000.00; // Example total expense
+  double totalIncome = 5440000.00;
+  double totalExpense = 2209000.00;
 
   @override
   void initState() {
     super.initState();
-    // Scroll to the selected month position after the first frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToSelectedMonth();
     });
   }
 
   void _scrollToSelectedMonth() {
-    // Calculate the position to scroll to based on the selected month
     int index = months.indexOf(selectedMonth);
-    double position = index * 100.0; // Adjust this value based on your item height
+    double position = index * 100.0;
     _scrollController.animateTo(
       position,
       duration: const Duration(milliseconds: 300),
@@ -65,7 +52,6 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     List<double> weeklyData = monthlyData[selectedMonth] ?? [0, 0, 0, 0];
 
-    // Getting the start and end dates for the selected month and year
     DateTime startDate =
         DateTime(selectedYear, months.indexOf(selectedMonth) + 1, 1);
     DateTime endDate =
@@ -79,7 +65,6 @@ class _ReportsPageState extends State<ReportsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Navigate to the HomeScreen when back is pressed
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -87,8 +72,8 @@ class _ReportsPageState extends State<ReportsPage> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,24 +81,28 @@ class _ReportsPageState extends State<ReportsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                    child: SummaryCard(
-                        title: 'Income',
-                        amount: totalIncome,
-                        color: Colors.green,
-                        isIncome: true)),
+                  child: SummaryCard(
+                    title: 'Income',
+                    amount: totalIncome,
+                    color: Colors.green,
+                    isIncome: true,
+                  ),
+                ),
                 const SizedBox(width: 20),
                 Expanded(
-                    child: SummaryCard(
-                        title: 'Expense',
-                        amount: totalExpense,
-                        color: Colors.red,
-                        isIncome: false)),
+                  child: SummaryCard(
+                    title: 'Expense',
+                    amount: totalExpense,
+                    color: Colors.red,
+                    isIncome: false,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 20),
             const Text(
               'Select Year:',
-              style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             DropdownButton<int>(
@@ -135,7 +124,7 @@ class _ReportsPageState extends State<ReportsPage> {
             const SizedBox(height: 20),
             const Text(
               'Select Month:',
-              style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             SingleChildScrollView(
@@ -148,7 +137,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     onTap: () {
                       setState(() {
                         selectedMonth = month;
-                        _scrollToSelectedMonth(); // Scroll to the selected month
+                        _scrollToSelectedMonth();
                       });
                     },
                     child: Container(
@@ -172,14 +161,17 @@ class _ReportsPageState extends State<ReportsPage> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text('Reports Overview',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Reports Overview',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 5),
             Text(
               'From ${DateFormat('MMM d, yyyy').format(startDate)} to ${DateFormat('MMM d, yyyy').format(endDate)}',
-              style: const TextStyle(fontSize: 16)),
+              style: const TextStyle(fontSize: 16),
+            ),
             const SizedBox(height: 20),
-            ReportsChart(weeklyData: weeklyData), // Use the chart widget
+            ReportsChart(weeklyData: weeklyData),
           ],
         ),
       ),
