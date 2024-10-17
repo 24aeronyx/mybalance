@@ -7,7 +7,7 @@ import 'edit_profile.dart';
 import '../widgets/navbar.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -24,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     _pages = [
       HomeScreen(navigateToHistory: _navigateToHistory), // Pass the navigation callback
       ReportsPage(),
-      HistoryScreen(),
+      const HistoryScreen(),
       ProfileScreen(),
       EditProfileScreen(),
     ];

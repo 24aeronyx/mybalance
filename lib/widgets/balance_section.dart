@@ -4,7 +4,7 @@ class BalanceSection extends StatelessWidget {
   final double totalBalance;
   final String Function(double) formatCurrency;
 
-  const BalanceSection({
+  const BalanceSection({super.key, 
     required this.totalBalance,
     required this.formatCurrency,
   });

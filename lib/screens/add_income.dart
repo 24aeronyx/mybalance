@@ -4,7 +4,7 @@ import '../models/transaction.dart';
 class AddIncomeScreen extends StatefulWidget {
   final Function(Transaction) onAddIncome; // Callback function to add income
 
-  AddIncomeScreen({Key? key, required this.onAddIncome}) : super(key: key);
+  const AddIncomeScreen({super.key, required this.onAddIncome});
 
   @override
   _AddIncomeScreenState createState() => _AddIncomeScreenState();
@@ -48,7 +48,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   }
 
   Color _getCategoryIconColor(String category) {
-    return Color.fromRGBO(0, 74, 173, 1); // Set the icon color to blue
+    return const Color.fromRGBO(0, 74, 173, 1); // Set the icon color to blue
   }
 
   void _selectDate() async {
@@ -151,16 +151,16 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                child: const Text(
-                  'Add Income',
-                  style: TextStyle(color: Colors.white),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
                   minimumSize: const Size(double.infinity, 50), // Full-width button
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0), // Rounded corners
                   ),
+                ),
+                child: const Text(
+                  'Add Income',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],

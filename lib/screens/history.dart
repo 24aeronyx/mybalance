@@ -4,7 +4,7 @@ import '../models/transaction.dart';
 import '../screens/main_screen.dart'; // Make sure to import your HomeScreen
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   @override
   _HistoryScreenState createState() => _HistoryScreenState();

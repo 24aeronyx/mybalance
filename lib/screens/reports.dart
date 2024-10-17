@@ -5,6 +5,8 @@ import '../widgets/reports_chart.dart'; // Import the chart widget
 import '../screens/main_screen.dart'; // Import your HomeScreen
 
 class ReportsPage extends StatefulWidget {
+  const ReportsPage({super.key});
+
   @override
   _ReportsPageState createState() => _ReportsPageState();
 }

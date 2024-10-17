@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart'; // Import the custom button
 
 class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
@@ -36,7 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // For example, you might want to save to a database or API
       // For demonstration, just show a snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully!')),
+        const SnackBar(content: Text('Profile updated successfully!')),
       );
     }
   }
@@ -118,7 +120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 20.0),
 
               // Save Changes Button
-              Container(
+              SizedBox(
                 width: double.infinity, // Optional: Make the button take up the full width
                 child: CustomButton(
                   text: 'Save Changes', // Customizable text

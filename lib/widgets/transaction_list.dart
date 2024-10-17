@@ -5,8 +5,7 @@ import '../models/transaction.dart'; // Pastikan Anda memiliki model Transaction
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
-  const TransactionList({required this.transactions, Key? key})
-      : super(key: key);
+  const TransactionList({required this.transactions, super.key});
 
   // Fungsi untuk memformat jumlah uang menjadi format dengan koma
   static String formatCurrency(double amount) {

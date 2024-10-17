@@ -5,10 +5,10 @@ class FillButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const FillButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

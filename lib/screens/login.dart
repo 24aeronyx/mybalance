@@ -5,6 +5,8 @@ import 'main_screen.dart'; // Import MainScreen
 import 'register.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // MyBalance Logo with Text
             Column(
               children: [
-                Image.network('https://i.imgur.com/ym1LpgW.png', height: 100), // Display logo
+                Image.asset('assets/img/MyBe.png', height: 100), // Display logo
                 const Text(
                   'MyBalance',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color.fromRGBO(0, 74, 173, 1)), // Bold text
@@ -111,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20.0),
                   // Login Button
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: CustomButton(
                       text: 'Login',

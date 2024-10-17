@@ -4,7 +4,7 @@ import '../models/transaction.dart';
 class AddExpenseScreen extends StatefulWidget {
   final Function(Transaction) onAddExpense; // Callback function to add expense
 
-  AddExpenseScreen({Key? key, required this.onAddExpense}) : super(key: key);
+  const AddExpenseScreen({super.key, required this.onAddExpense});
 
   @override
   _AddExpenseScreenState createState() => _AddExpenseScreenState();
@@ -48,7 +48,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   Color _getCategoryIconColor(String category) {
-    return Color.fromRGBO(0, 74, 173, 1); // Set the icon color to blue
+    return const Color.fromRGBO(0, 74, 173, 1); // Set the icon color to blue
   }
 
   void _selectDate() async {
@@ -151,16 +151,16 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                child:  Text(
-                  'Add Expense',
-                  style: TextStyle(color: Colors.white),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(0, 74, 173, 1),
                   minimumSize: const Size(double.infinity, 50), // Full-width button
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0), // Rounded corners
                   ),
+                ),
+                child:  Text(
+                  'Add Expense',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],

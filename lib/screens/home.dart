@@ -11,7 +11,7 @@ import '../screens/add_income.dart';
 class HomeScreen extends StatefulWidget {
   final Function navigateToHistory; // Callback function for navigation
 
-  HomeScreen({Key? key, required this.navigateToHistory}) : super(key: key);
+  const HomeScreen({super.key, required this.navigateToHistory});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -119,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Row(
           children: [
-            Image.network(
-              'https://i.imgur.com/Ddywgdr.png',
+            Image.asset(
+              'assets/img/MyBe-White.png',
               width: 30,
               height: 30,
             ),

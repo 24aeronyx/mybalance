@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ReportsChart extends StatelessWidget {
   final List<double> weeklyData;
 
-  const ReportsChart({Key? key, required this.weeklyData}) : super(key: key);
+  const ReportsChart({super.key, required this.weeklyData});
 
   @override
   Widget build(BuildContext context) {

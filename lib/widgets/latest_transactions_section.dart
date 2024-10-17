@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LatestTransactionsSection extends StatelessWidget {
   final VoidCallback viewMore;
 
-  const LatestTransactionsSection({
+  const LatestTransactionsSection({super.key, 
     required this.viewMore,
   });
 

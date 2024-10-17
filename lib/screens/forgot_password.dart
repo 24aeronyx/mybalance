@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart'; // Import the custom button
 
 class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
+
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
@@ -71,7 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 20.0),
 
               // Reset Password Button
-              Container(
+              SizedBox(
                 width: double.infinity, // Make the button take up the full width
                 child: CustomButton(
                   text: 'Send Reset Link', // Customizable text

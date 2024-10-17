@@ -4,7 +4,7 @@ class ShortcutButtons extends StatelessWidget {
   final VoidCallback addIncome;
   final VoidCallback addExpense;
 
-  const ShortcutButtons({
+  const ShortcutButtons({super.key, 
     required this.addIncome,
     required this.addExpense,
   });

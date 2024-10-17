@@ -7,12 +7,12 @@ class SummaryCard extends StatelessWidget {
   final bool isIncome;
 
   const SummaryCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.amount,
     required this.color,
     required this.isIncome,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

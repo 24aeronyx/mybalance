@@ -13,7 +13,9 @@ class ProfileScreen extends StatelessWidget {
   final String email = "arielpratama9182@gmail.com";
   final String phoneNumber = "085389899996";
   final double totalIncome = 5440000.00; // Example total income
-  final double totalExpense = 2209000.00; // Example total expense
+  final double totalExpense = 2209000.00;
+
+  const ProfileScreen({super.key}); // Example total expense
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                 const CircleAvatar(
                   radius: 40,
                   backgroundImage:
-                      NetworkImage('https://i.imgur.com/Ddywgdr.png'),
+                      AssetImage('assets/img/MyBe-White.png'),
                 ),
                 const SizedBox(height: 8),
                 const Text(
