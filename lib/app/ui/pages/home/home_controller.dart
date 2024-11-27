@@ -7,13 +7,16 @@ class HomeController extends GetxController {
   var fullName = ''.obs;
 
   Future<void> fetchProfile() async {
-    final url = Uri.parse('http://10.0.2.2:3005/profile'); // Endpoint profil
+    final url = Uri.parse('http://10.0.2.2:3005/profile');
     try {
       // Ambil token dari SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
-      if (token != null) {
-        print('Token: $token');
+
+      if (token == null) {
+        // Jika token tidak ditemukan
+        Get.snackbar('Error', 'Token tidak ditemukan. Silakan login kembali.');
+        return;
       }
 
       final response = await http.get(
@@ -26,12 +29,21 @@ class HomeController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        fullName.value = data['profile']['full_name']; 
-        print(fullName);
+        if (data['profile']?['full_name'] != null) {
+          fullName.value = data['profile']['full_name'];
+        } else {
+          // Jika profil tidak mengandung full_name
+          Get.snackbar('Error', 'Data profil tidak valid.');
+        }
+      } else if (response.statusCode == 401) {
+        // Token tidak valid atau kedaluwarsa
+        Get.snackbar('Error', 'Token kedaluwarsa. Silakan login kembali.');
       } else {
+        // Kesalahan lainnya
         Get.snackbar('Error', 'Gagal mengambil profil: ${response.statusCode}');
       }
     } catch (e) {
+      // Penanganan error saat proses HTTP atau parsing data
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
     }
   }
