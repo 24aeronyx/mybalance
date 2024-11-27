@@ -1,16 +1,32 @@
-# mybalance
+# MyBalance
 
-A new Flutter project.
+**MyBalance** adalah aplikasi mobile yang dirancang untuk membantu pengguna mengelola keuangan pribadi mereka. Dengan fitur pencatatan transaksi, estimasi saldo, dan pelaporan, aplikasi ini bertujuan memberikan kemudahan dalam mengelola keuangan sehari-hari.
 
-## Getting Started
+## 📱 Fitur Utama
 
-This project is a starting point for a Flutter application.
+- **Pencatatan Transaksi**  
+  Catat pemasukan dan pengeluaran dengan detail seperti kategori, jumlah, dan tanggal.
 
-A few resources to get you started if this is your first Flutter project:
+- **Estimasi Saldo Masa Depan**  
+  Perkirakan saldo berdasarkan transaksi yang telah dicatat.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Laporan Keuangan**  
+  Analisis keuangan Anda berdasarkan periode tertentu.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Riwayat Transaksi**  
+  Akses semua transaksi Anda dengan mudah.
+
+- **Navigasi Praktis**  
+  Navigasi intuitif menggunakan bottom navigation bar.
+
+- **Desain Modern**  
+  Dibangun dengan Flutter untuk pengalaman pengguna yang responsif dan mulus.
+
+## 🔧 Teknologi yang Digunakan
+
+- **Bahasa Pemrograman**: Dart  
+- **Framework**: Flutter  
+- **State Management**: GetX  
+- **Pustaka Tambahan**:
+  - `intl`: Untuk format tanggal.
+  - `icons_plus`: Untuk ikon tambahan.
