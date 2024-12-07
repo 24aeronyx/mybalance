@@ -3,16 +3,15 @@ import 'package:get/get.dart';
 import 'package:mybalance/app/ui/components/bottom_nav/bottom_nav_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends GetView<BottomNavController> {
   const BottomNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavController bottomNavController = Get.find();
     return Obx(
       () => BottomNavigationBar(
-        currentIndex: bottomNavController.selectedIndex.value,
-        onTap: (index) => bottomNavController.changeTabIndex(index),
+        currentIndex: controller.selectedIndex.value,
+        onTap: (index) => controller.changeTabIndex(index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30),

@@ -3,11 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:mybalance/app/models/transaction_model.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:mybalance/app/utils/color.dart';
+import 'package:mybalance/app/utils/text.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
-  const TransactionList({Key? key, required this.transactions}) : super(key: key);
+  const TransactionList({super.key, required this.transactions});
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -69,7 +70,7 @@ class TransactionList extends StatelessWidget {
                   Text(
                     '${transaction.category == 'Income' ? '+' : '-'} Rp. ${transaction.amount.toStringAsFixed(2)}',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: FontSize.large,
                       fontWeight: FontWeight.w600,
                       color: transaction.category == 'Income'
                           ? Colors.green

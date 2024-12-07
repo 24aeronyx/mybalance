@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mybalance/app/routes/app_routes.dart';
-import 'package:mybalance/app/ui/components/bottom_nav/bottom_nav_binding.dart';
 import 'package:mybalance/app/utils/color.dart';
 
 void main() {
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: AppRoutes.main,
         getPages: AppRoutes.routes,
-        debugShowCheckedModeBanner: false,
-        initialBinding: BottomNavbarBinding());
+        debugShowCheckedModeBanner: false)
+        ;
   }
 }

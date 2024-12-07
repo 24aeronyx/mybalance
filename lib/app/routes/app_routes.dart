@@ -12,6 +12,7 @@ import 'package:mybalance/app/ui/pages/main/main_page.dart';
 import 'package:mybalance/app/ui/pages/outcome/outcome_page.dart';
 import 'package:mybalance/app/ui/pages/profile/profile_page.dart';
 import 'package:mybalance/app/ui/pages/register/register_page.dart';
+import 'package:mybalance/app/ui/pages/reports/reports_binding.dart';
 import 'package:mybalance/app/ui/pages/reports/reports_page.dart';
 import 'package:mybalance/app/ui/pages/settings/settings_page.dart';
 
@@ -38,18 +39,15 @@ class AppRoutes {
     GetPage(
         name: home,
         page: () => HomePage(),
-        bindings: [HomeBinding(), BottomNavbarBinding()]),
+        bindings: [HomeBinding(), BottomNavBinding()]),
     GetPage(name: income, page: () => const IncomePage()),
     GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: main, page: () => MainPage(), bindings: [
-      HomeBinding(),
-      BottomNavbarBinding(),
+    GetPage(name: main, page: () => MainPage(), bindings: [ BottomNavBinding(), HomeBinding(), ReportsBinding()
     ]),
     GetPage(name: outcome, page: () => const OutcomePage()),
     GetPage(
         name: profile,
-        page: () => const ProfilePage(),
-        bindings: [BottomNavbarBinding()]),
+        page: () => const ProfilePage()),
     GetPage(name: register, page: () => const RegisterPage()),
     GetPage(name: reports, page: () => const ReportsPage()),
     GetPage(name: settings, page: () => const SettingsPage()),
