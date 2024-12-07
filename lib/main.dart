@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         title: 'My Balance',
         theme: ThemeData(
           primaryColor: AppColors.primary,
-          scaffoldBackgroundColor: Colors.white,
+          scaffoldBackgroundColor: AppColors.secondary,
           fontFamily: 'DM Sans',
           useMaterial3: true,
         ),

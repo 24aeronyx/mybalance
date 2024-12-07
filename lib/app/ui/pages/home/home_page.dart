@@ -107,7 +107,7 @@ class HomePage extends GetView<HomeController> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.secondary,
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),

@@ -8,7 +8,6 @@ class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
   const TransactionList({Key? key, required this.transactions}) : super(key: key);
-  
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -17,20 +16,12 @@ class TransactionList extends StatelessWidget {
         itemBuilder: (context, index) {
           final transaction = transactions[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.secondary,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

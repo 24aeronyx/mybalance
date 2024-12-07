@@ -10,9 +10,9 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
+          preferredSize: const Size.fromHeight(90),
           child: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.secondary,
             flexibleSpace: const SafeArea(
               child: Padding(
                   padding: EdgeInsets.all(20),
@@ -86,36 +86,65 @@ class ProfilePage extends StatelessWidget {
                     ],
                   )),
               const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.lock_reset, color: Colors.blue),
-                title: const Text(
-                  'Forgot Password',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.lock_reset, color: Colors.blue, size: 30,),
+                      title: const Text(
+                        'Forgot Password',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: const Text(
+                        'Reset your account password',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w300),
+                      ),
+                      onTap: () {
+                        // Aksi ketika item di-tap
+                        Get.toNamed('/forgot-password'); // Contoh navigasi
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.logout, color: Colors.red, size: 30),
+                      title: const Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: const Text(
+                        'Sign out from your account',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w300),
+                      ),
+                      onTap: () {
+                        // Aksi ketika item di-tap
+                        Get.toNamed('/login');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Clarity.info_solid, color: Colors.amber, size: 30),
+                      title: const Text(
+                        'About App',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: const Text(
+                        'Details about MyBalance ',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w300),
+                      ),
+                      onTap: () {
+                        // Aksi ketika item di-tap
+                        Get.toNamed('/about');
+                      },
+                    ),
+                  ],
                 ),
-                subtitle: const Text(
-                  'Reset your account password',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
-                ),
-                onTap: () {
-                  // Aksi ketika item di-tap
-                  Get.toNamed('/forgot-password'); // Contoh navigasi
-                },
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                subtitle: const Text(
-                  'Sign out from your account',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
-                ),
-                onTap: () {
-                  // Aksi ketika item di-tap
-                  Get.toNamed('/login');
-                },
               ),
             ],
           ),
