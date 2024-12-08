@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
   var fullName = ''.obs;
+  var balance = ''.obs;
 
   Future<void> fetchProfile() async {
     final url = Uri.parse('http://10.0.2.2:3005/profile');
@@ -31,6 +32,7 @@ class HomeController extends GetxController {
         final data = jsonDecode(response.body);
         if (data['profile']?['full_name'] != null) {
           fullName.value = data['profile']['full_name'];
+          balance.value = data['profile']['balance'].toString();
         } else {
           // Jika profil tidak mengandung full_name
           Get.snackbar('Error', 'Data profil tidak valid.');
@@ -47,4 +49,5 @@ class HomeController extends GetxController {
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
     }
   }
+
 }

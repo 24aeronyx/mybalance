@@ -102,7 +102,7 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     controller.fetchProfile();
-
+    
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
@@ -169,13 +169,15 @@ class HomePage extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                  const Text(
-                    'Rp. 15.000',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black),
-                  ),
+                  Obx(() {
+                    return Text(
+                      'Rp. ${controller.balance.value.isNotEmpty ? controller.balance.value : '-'}',
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                    );
+                  }),
                 ],
               ),
               Padding(
