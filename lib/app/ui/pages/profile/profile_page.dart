@@ -80,7 +80,7 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ]),
                       const Icon(
-                        Clarity.pencil_line,
+                        BoxIcons.bxs_pencil,
                         color: Colors.white,
                       )
                     ],
@@ -110,7 +110,7 @@ class ProfilePage extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.logout, color: Colors.red, size: 30),
+                      leading: const Icon(BoxIcons.bxs_log_out_circle, color: Colors.red, size: 30),
                       title: const Text(
                         'Logout',
                         style: TextStyle(
@@ -127,7 +127,7 @@ class ProfilePage extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Clarity.info_solid, color: Colors.amber, size: 30),
+                      leading: const Icon(BoxIcons.bxs_info_circle, color: Colors.amber, size: 30),
                       title: const Text(
                         'About App',
                         style: TextStyle(

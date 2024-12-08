@@ -128,7 +128,7 @@ class HomePage extends GetView<HomeController> {
                       border:
                           Border.all(color: const Color.fromRGBO(0, 0, 0, 0.3)),
                     ),
-                    child: const Icon(Clarity.cog_line,
+                    child: const Icon(BoxIcons.bx_cog,
                         size: 30, color: Colors.black),
                   ),
                 ],

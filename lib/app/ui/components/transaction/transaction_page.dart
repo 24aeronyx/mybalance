@@ -73,8 +73,8 @@ class TransactionList extends StatelessWidget {
                       fontSize: FontSize.large,
                       fontWeight: FontWeight.w600,
                       color: transaction.category == 'Income'
-                          ? Colors.green
-                          : Colors.red,
+                          ? AppColors.income
+                          : AppColors.outcome,
                     ),
                   ),
                 ],
