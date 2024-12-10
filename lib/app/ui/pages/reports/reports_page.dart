@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:mybalance/app/models/transaction_model.dart';
+import 'package:mybalance/app/ui/components/transaction/transaction_page.dart';
 import 'package:mybalance/app/utils/color.dart';
 import 'package:mybalance/app/utils/text.dart';
 import 'package:get/get.dart';
@@ -232,136 +234,234 @@ class ReportsPage extends GetView<ReportsController> {
 
           // Bar chart for income and outcome
           Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Obx(() {
-                bool hasData = controller.totalIncome.value > 0 ||
-                    controller.totalOutcome.value > 0;
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Obx(() {
+              bool hasData = controller.totalIncome.value > 0 ||
+                  controller.totalOutcome.value > 0;
 
-                if (!hasData) {
-                  return const Text(
-                    'No data available',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                  );
-                }
+              if (!hasData) {
+                return const Text(
+                  'No data available',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                );
+              }
 
-                return Column(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1.7,
-                      child: BarChart(
-                        BarChartData(
-                          alignment: BarChartAlignment.spaceBetween,
-                          maxY: 2000, // Sesuaikan dengan nilai maksimum data
-                          gridData: FlGridData(
-                            show: true,
-                            drawHorizontalLine: true,
-                            drawVerticalLine: false,
-                            getDrawingHorizontalLine: (value) {
-                              return FlLine(
-                                color: Colors.black.withOpacity(0.1),
-                                strokeWidth: 1,
-                              );
-                            },
-                          ),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          barGroups: List.generate(
-                              controller.weeklyIncomeData.length, (index) {
-                            return BarChartGroupData(
-                              x: index,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: controller.weeklyIncomeData[index],
-                                  color: AppColors.income,
-                                  width: 20,
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                                BarChartRodData(
-                                  toY: controller.weeklyOutcomeData[index],
-                                  color: AppColors.outcome,
-                                  width: 20,
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                              ],
+              return Column(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.7,
+                    child: BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceBetween,
+                        maxY: controller.getMaxY(),
+                        gridData: FlGridData(
+                          show: true,
+                          drawHorizontalLine: true,
+                          drawVerticalLine: false,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(
+                              color: Colors.black.withOpacity(0.1),
+                              strokeWidth: 1,
                             );
-                          }),
-                          titlesData: FlTitlesData(
-                            topTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                getTitlesWidget: (value, titleMeta) {
-                                  switch (value.toInt()) {
-                                    case 0:
-                                      return const Text('Week 1');
-                                    case 1:
-                                      return const Text('Week 2');
-                                    case 2:
-                                      return const Text('Week 3');
-                                    case 3:
-                                      return const Text('Week 4');
-                                    default:
-                                      return const Text('');
-                                  }
-                                },
-                                reservedSize: 32,
+                          },
+                        ),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        barGroups: List.generate(
+                            controller.weeklyIncomeData.length, (index) {
+                          return BarChartGroupData(
+                            x: index,
+                            barRods: [
+                              BarChartRodData(
+                                toY: controller.weeklyIncomeData[index],
+                                color: AppColors.income,
+                                width: 20,
+                                borderRadius: BorderRadius.zero,
                               ),
-                            ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                getTitlesWidget: (value, titleMeta) {
-                                  return Text(
-                                    formatYAxisLabel(value),
-                                    style: const TextStyle(
-                                        fontSize: 10, color: Colors.black),
-                                  );
-                                },
-                                reservedSize: 32,
+                              BarChartRodData(
+                                toY: controller.weeklyOutcomeData[index],
+                                color: AppColors.outcome,
+                                width: 20,
+                                borderRadius: BorderRadius.zero,
                               ),
+                            ],
+                          );
+                        }),
+                        titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, titleMeta) {
+                                switch (value.toInt()) {
+                                  case 0:
+                                    return const Text('Week 1');
+                                  case 1:
+                                    return const Text('Week 2');
+                                  case 2:
+                                    return const Text('Week 3');
+                                  case 3:
+                                    return const Text('Week 4');
+                                  default:
+                                    return const Text('');
+                                }
+                              },
+                              reservedSize: 32,
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, titleMeta) {
+                                return Text(
+                                  formatYAxisLabel(value),
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.black),
+                                );
+                              },
+                              reservedSize: 32,
                             ),
                           ),
                         ),
+                        barTouchData: BarTouchData(
+                          enabled: true, // Enable touch events
+                          touchCallback: (FlTouchEvent event,
+                              BarTouchResponse? touchResponse) {
+                            if (touchResponse != null &&
+                                touchResponse.spot != null) {
+                              int touchedIndex =
+                                  touchResponse.spot!.touchedBarGroupIndex;
+                              double incomeValue =
+                                  controller.weeklyIncomeData[touchedIndex];
+                              double outcomeValue =
+                                  controller.weeklyOutcomeData[touchedIndex];
+                            }
+                          },
+                          longPressDuration: const Duration(milliseconds: 500),
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                width: 20,
-                                height: 10,
-                                color: AppColors.income,
-                              ),
-                              const Text('Income'),
-                            ],
-                          ),
-                          const SizedBox(width: 20),
-                          Column(
-                            children: [
-                              Container(
-                                width: 20,
-                                height: 10,
-                                color: AppColors.outcome,
-                              ),
-                              const Text('Outcome'),
-                            ],
-                          ),
-                        ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 10,
+                              color: AppColors.income,
+                            ),
+                            const Text('Income'),
+                          ],
+                        ),
+                        const SizedBox(width: 20),
+                        Column(
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 10,
+                              color: AppColors.outcome,
+                            ),
+                            const Text('Outcome'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+          Container(
+            width: 200, // Lebar kontainer toggle
+            height: 50, // Tinggi kontainer toggle
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30), // Sudut melengkung
+              color: Colors.blueGrey[100],
+            ),
+            child: Stack(
+              children: [
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 300), // Durasi animasi
+                  curve: Curves.easeInOut,
+                  left: controller.selectedType.value == 'income'
+                      ? 0
+                      : 100, // Posisi geser
+                  child: InkWell(
+                    onTap: () {
+                      controller
+                          .updateSelectedType('income'); // Update selectedType
+                    },
+                    child: Container(
+                      width: 100, // Lebar yang sama untuk kedua tombol
+                      height: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: controller.selectedType.value == 'income'
+                            ? Colors.blue
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text(
+                        'Income',
+                        style: TextStyle(
+                          color: controller.selectedType.value == 'income'
+                              ? Colors.white
+                              : Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ],
-                );
-              })),
+                  ),
+                ),
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 300), // Durasi animasi
+                  curve: Curves.easeInOut,
+                  left: controller.selectedType.value == 'outcome'
+                      ? 0
+                      : 100, // Posisi geser
+                  child: InkWell(
+                    onTap: () {
+                      controller
+                          .updateSelectedType('outcome'); // Update selectedType
+                    },
+                    child: Container(
+                      width: 100, // Lebar yang sama untuk kedua tombol
+                      height: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: controller.selectedType.value == 'outcome'
+                            ? Colors.red
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text(
+                        'Outcome',
+                        style: TextStyle(
+                          color: controller.selectedType.value == 'outcome'
+                              ? Colors.white
+                              : Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 20),
+          // Daftar transaksi berdasarkan tipe yang dipilih
         ]),
       ),
     );

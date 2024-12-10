@@ -15,6 +15,7 @@ class ReportsController extends GetxController {
   var allOutcomeData = <double>[].obs;
   var filteredTransactions = <Transaction>[].obs;
   var allTransactions = <Transaction>[].obs;
+  var selectedType = 'income'.obs;
 
   final filters = <String>[
     'January',
@@ -41,6 +42,33 @@ class ReportsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAllTransactions(selectedYear.value, selectedMonth.value);
+  }
+  
+  double getMaxY() {
+    double maxIncome = weeklyIncomeData.isNotEmpty
+        ? weeklyIncomeData.reduce((a, b) => a > b ? a : b)
+        : 0.0;
+    double maxOutcome = weeklyOutcomeData.isNotEmpty
+        ? weeklyOutcomeData.reduce((a, b) => a > b ? a : b)
+        : 0.0;
+    double maxValue = maxIncome > maxOutcome ? maxIncome : maxOutcome;
+
+    return maxValue + (maxValue * 0.1); // Tambahkan margin 10%
+  }
+
+  void updateSelectedType(String type) {
+    selectedType.value = type;
+    fetchFilteredData();
+  }
+
+  Future<void> fetchFilteredDatabyType() async {
+    if (selectedType.value == 'income') {
+      weeklyIncomeData.value = allIncomeData;
+      weeklyOutcomeData.value = [];
+    } else {
+      weeklyOutcomeData.value = allOutcomeData;
+      weeklyIncomeData.value = [];
+    }
   }
 
   void updateMonth(String selectedFilter) {
