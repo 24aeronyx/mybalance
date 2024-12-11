@@ -54,7 +54,7 @@ class ReportsPage extends GetView<ReportsController> {
           ),
         ),
         body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -72,7 +72,8 @@ class ReportsPage extends GetView<ReportsController> {
                         children: [
                           const Text(
                             'Income',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: FontSize.large),
                           ),
                           const SizedBox(height: 10),
                           Obx(() {
@@ -92,6 +93,7 @@ class ReportsPage extends GetView<ReportsController> {
                         ],
                       ),
                     ),
+
                     // Separator
                     Container(
                       height: 60,
@@ -104,7 +106,8 @@ class ReportsPage extends GetView<ReportsController> {
                         children: [
                           const Text(
                             'Outcome',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white, fontSize: FontSize.large),
                           ),
                           const SizedBox(height: 10),
                           Obx(() {
@@ -348,6 +351,23 @@ class ReportsPage extends GetView<ReportsController> {
                                       controller.weeklyIncomeData[touchedIndex];
                                   double outcomeValue = controller
                                       .weeklyOutcomeData[touchedIndex];
+
+                                  // Format the income and outcome values
+                                  String formattedIncome =
+                                      NumberFormat.currency(
+                                    locale: 'id_ID', // Indonesian locale
+                                    symbol: 'Rp. ', // Currency symbol
+                                  ).format(incomeValue);
+
+                                  String formattedOutcome =
+                                      NumberFormat.currency(
+                                    locale: 'id_ID', // Indonesian locale
+                                    symbol: 'Rp. ', // Currency symbol
+                                  ).format(outcomeValue);
+
+                                  // Update formatted values in the controller
+                                  controller.updateFormattedValues(
+                                      formattedIncome, formattedOutcome);
                                 }
                               },
                               longPressDuration:
@@ -389,36 +409,127 @@ class ReportsPage extends GetView<ReportsController> {
                   );
                 }),
               ),
-
-              ToggleButtons(
-                isSelected: [
-                  controller.selectedType.value == 'income',
-                  controller.selectedType.value == 'outcome',
-                ],
-                onPressed: (index) {
-                  if (index == 0) {
-                    controller.toggleTransactionType('income');
-                  } else {
-                    controller.toggleTransactionType('outcome');
-                  }
-                },
-                borderRadius: BorderRadius.circular(10),
-                selectedColor: Colors.white,
-                fillColor: Colors.blue,
-                color: Colors.black,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text('Income'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text('Outcome'),
-                  ),
-                ],
+              Obx(
+                () => ToggleButtons(
+                  isSelected: [
+                    controller.selectedType.value == 'income',
+                    controller.selectedType.value == 'outcome',
+                  ],
+                  onPressed: (index) {
+                    if (index == 0) {
+                      controller.toggleTransactionType('income');
+                    } else {
+                      controller.toggleTransactionType('outcome');
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  selectedColor: Colors.white,
+                  fillColor: AppColors.primary,
+                  color: Colors.black,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Income',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: FontSize.large),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'Outcome',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: FontSize.large),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 20),
-              // Display the filtered transactions (based on type)
+              const SizedBox(height: 20),
+              Obx(() {
+                List<Map<String, dynamic>> data =
+                    controller.selectedType.value == 'income'
+                        ? controller.groupedIncomeData
+                        : controller.groupedOutcomeData;
+
+                double total = data.fold(
+                    0,
+                    (sum, value) =>
+                        sum + value['amount']); // Total seluruh amount
+
+                // Generate warna terang
+                List<Color> sectionColors = controller.generateBrightColors(data.length);
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Pie Chart (diperkecil)
+                    SizedBox(
+                      width: 220, // Ukuran pie chart lebih kecil
+                      height: 220,
+                      child: PieChart(
+                        PieChartData(
+                          sections: List.generate(data.length, (index) {
+                            double percentage = total > 0
+                                ? (data[index]['amount'] / total) * 100
+                                : 0;
+                            return PieChartSectionData(
+                              value: data[index]['amount'],
+                              color: sectionColors[index], // Warna dinamis
+                              title:
+                                  '${percentage.toStringAsFixed(1)}%', // Persentase
+                              radius: 90, // Radius pie lebih kecil
+                              titleStyle: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              titlePositionPercentageOffset: 1.2,
+                            );
+                          }),
+                          borderData: FlBorderData(show: false),
+                          sectionsSpace: 2,
+                          centerSpaceRadius: 0,
+                        ),
+                      ),
+                    ),
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      direction: Axis.vertical,
+                      children: List.generate(data.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5), // Spasi antar item
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 20,
+                                height: 10,
+                                color: sectionColors[index],
+                              ),
+                              const SizedBox(
+                                  width: 8), // Jarak antara warna dan teks
+                              // Title
+                              Text(
+                                data[index]['title'], // Menampilkan title
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 20)
             ])));
+
+    // Display the filtered transactions (based on type)
   }
 }

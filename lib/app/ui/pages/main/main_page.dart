@@ -11,7 +11,7 @@ class MainPage extends GetView<BottomNavController> {
   MainPage({super.key});
 
   final List<Widget> pages = [
-    HomePage(),
+    const HomePage(),
     const ReportsPage(),
     const HistoryPage(),
     const ProfilePage(),

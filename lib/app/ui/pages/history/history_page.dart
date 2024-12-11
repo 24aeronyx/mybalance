@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mybalance/app/ui/components/transaction/transaction_page.dart';
+import 'package:mybalance/app/ui/pages/history/history_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends GetView<HistoryController> {
   const HistoryPage({super.key});
 
   @override
@@ -24,7 +27,13 @@ class HistoryPage extends StatelessWidget {
         ),
         body: Center(
           child: Row(
-            children: [],
+            children: [
+              Obx(() {
+                return TransactionList(
+                  transactions: controller.latestTransactionList.value,
+                );
+              })
+            ],
           ),
         ));
   }

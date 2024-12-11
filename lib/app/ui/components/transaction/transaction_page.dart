@@ -9,6 +9,7 @@ class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
   const TransactionList({super.key, required this.transactions});
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -19,7 +20,7 @@ class TransactionList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 2),
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: AppColors.secondary,
                 borderRadius: BorderRadius.circular(12),
@@ -35,9 +36,7 @@ class TransactionList extends StatelessWidget {
                         backgroundColor: const Color.fromARGB(255, 214, 232, 255),
                         radius: 20,
                         child: Icon(
-                          transaction.type == 'income'
-                              ? FontAwesome.arrow_right_solid
-                              : FontAwesome.arrow_left_solid,
+                          _getTransactionIcon(transaction),
                           size: 20,
                           color: AppColors.primary,
                         ),
@@ -84,5 +83,36 @@ class TransactionList extends StatelessWidget {
         },
       ),
     );
+  }
+
+  // Function to get the appropriate icon for the transaction type and category
+  IconData _getTransactionIcon(Transaction transaction) {
+    if (transaction.type == 'income') {
+      // Return income icon based on category
+      switch (transaction.category) {
+        case 'Salary':
+          return FontAwesome.money_bill_1_solid;
+        case 'Investment':
+          return FontAwesome.chart_line_solid;
+        case 'Gift':
+          return FontAwesome.gift_solid;
+        default:
+          return FontAwesome.gift_solid;
+      }
+    } else {
+      // Return outcome icon based on category
+      switch (transaction.category) {
+        case 'Food':
+          return FontAwesome.bowl_rice_solid;
+        case 'Transportation':
+          return FontAwesome.car_solid;
+        case 'Entertainment':
+          return FontAwesome.film_solid;
+        case 'Utilities':
+          return FontAwesome.wrench_solid;
+        default:
+          return FontAwesome.wrench_solid; // Default outcome icon
+      }
+    }
   }
 }

@@ -6,7 +6,6 @@ import 'package:mybalance/app/ui/pages/home/home_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
 
 class HomePage extends GetView<HomeController> {
-
   const HomePage({super.key});
 
   @override
@@ -18,7 +17,7 @@ class HomePage extends GetView<HomeController> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: AppBar(
-          backgroundColor: AppColors.secondary, // Pasti
+          backgroundColor: AppColors.secondary,
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -48,119 +47,152 @@ class HomePage extends GetView<HomeController> {
           ),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Flex(
-                direction: Axis.horizontal,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          // Tampilkan indikator loading
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (controller.dataNotFound.value) {
+          // Tampilkan pesan error jika data tidak ditemukan
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Data not found',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.offAllNamed('/login'); // Direct ke halaman login
+                  },
+                  child: const Text('Go to Login'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Tampilkan konten utama jika data berhasil dimuat
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Flex(
+                direction: Axis.vertical,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Flex(
+                    direction: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Gunakan Obx di sini
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Obx(() {
+                            return Text(
+                              'Hello ${controller.fullName.value.isNotEmpty ? controller.fullName.value : 'User'},',
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
+                            );
+                          }),
+                          const Text(
+                            'Your available balance',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                color: Color.fromRGBO(0, 0, 0, 0.5)),
+                          ),
+                        ],
+                      ),
                       Obx(() {
                         return Text(
-                          'Hello ${controller.fullName.value.isNotEmpty ? controller.fullName.value : 'User'},',
+                          'Rp. ${controller.balance.value.isNotEmpty ? controller.balance.value : '-'}',
                           style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               color: Colors.black),
                         );
                       }),
-                      const Text(
-                        'Your available balance',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w300,
-                            color: Color.fromRGBO(0, 0, 0, 0.5)),
-                      ),
                     ],
                   ),
-                  Obx(() {
-                    return Text(
-                      'Rp. ${controller.balance.value.isNotEmpty ? controller.balance.value : '-'}',
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
-                    );
-                  }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const Column(
+                            children: [
+                              Icon(
+                                FontAwesome.sack_dollar_solid,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text('Add Income',
+                                  style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                          Container(
+                            height: 60,
+                            width: 1,
+                            color: AppColors.secondary,
+                          ),
+                          const Column(
+                            children: [
+                              Icon(
+                                FontAwesome.sack_xmark_solid,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text('Add Outcome',
+                                  style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Latest Transaction',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                        const SizedBox(height: 10),
+                        Obx(() {
+                          return TransactionList(
+                            transactions:
+                                controller.latestTransactionList.value,
+                          );
+                        })
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Column(
-                        children: [
-                          Icon(
-                            FontAwesome.sack_dollar_solid,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                          SizedBox(height: 10),
-                          Text('Add Income',
-                              style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                      Container(
-                        height: 60,
-                        width: 1,
-                        color: AppColors.secondary,
-                      ),
-                      const Column(
-                        children: [
-                          Icon(
-                            FontAwesome.sack_xmark_solid,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                          SizedBox(height: 10),
-                          Text('Add Outcome',
-                              style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Latest Transaction',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600)),
-                    ),
-                    const SizedBox(height: 10),
-                    Obx(() {
-                      return TransactionList(
-                        transactions: controller.latestTransactionList.value,
-                      );
-                    })
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      }),
     );
   }
 }

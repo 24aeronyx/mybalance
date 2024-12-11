@@ -3,6 +3,7 @@ import 'package:mybalance/app/ui/components/bottom_nav/bottom_nav_binding.dart';
 import 'package:mybalance/app/ui/pages/about/about_page.dart';
 import 'package:mybalance/app/ui/pages/editpassword/editpassword_page.dart';
 import 'package:mybalance/app/ui/pages/editprofile/editprofile_page.dart';
+import 'package:mybalance/app/ui/pages/history/history_binding.dart';
 import 'package:mybalance/app/ui/pages/history/history_page.dart';
 import 'package:mybalance/app/ui/pages/home/home_binding.dart';
 import 'package:mybalance/app/ui/pages/home/home_page.dart';
@@ -38,11 +39,11 @@ class AppRoutes {
     GetPage(name: history, page: () => const HistoryPage()),
     GetPage(
         name: home,
-        page: () => HomePage(),
+        page: () => const HomePage(),
         bindings: [HomeBinding(), BottomNavBinding()]),
     GetPage(name: income, page: () => const IncomePage()),
     GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: main, page: () => MainPage(), bindings: [ BottomNavBinding(), HomeBinding(), ReportsBinding()
+    GetPage(name: main, page: () => MainPage(), bindings: [ BottomNavBinding(), HomeBinding(), ReportsBinding(), HistoryBinding()
     ]),
     GetPage(name: outcome, page: () => const OutcomePage()),
     GetPage(

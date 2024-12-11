@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mybalance/app/models/transaction_model.dart';
@@ -7,15 +8,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ReportsController extends GetxController {
   var selectedMonth = DateTime.now().month.obs;
   var selectedYear = DateTime.now().year.obs;
-  var totalIncome = 0.0.obs;
-  var totalOutcome = 0.0.obs;
-  var weeklyIncomeData = <double>[].obs;
-  var weeklyOutcomeData = <double>[].obs;
-  var allIncomeData = <double>[].obs;
-  var allOutcomeData = <double>[].obs;
+  RxDouble totalIncome = 0.0.obs;
+  RxDouble totalOutcome = 0.0.obs;
+  RxList<double> weeklyIncomeData =
+      List<double>.filled(4, 0.0, growable: false).obs;
+  RxList<double> weeklyOutcomeData =
+      List<double>.filled(4, 0.0, growable: false).obs;
+  var monthlyGroupedData = <Map<String, dynamic>>[].obs;
+  var groupedIncomeData = <Map<String, dynamic>>[].obs;
+  var groupedOutcomeData = <Map<String, dynamic>>[].obs;
   var filteredTransactions = <Transaction>[].obs;
-  var allTransactions = <Transaction>[].obs;
+  RxList<Map<String, dynamic>> allTransactions = <Map<String, dynamic>>[].obs;
   var selectedType = 'income'.obs;
+  RxString formattedIncome = ''.obs;
+  RxString formattedOutcome = ''.obs;
+  RxMap<String, List<double>> allTransactionsByTitle = RxMap({});
 
   final filters = <String>[
     'January',
@@ -44,6 +51,93 @@ class ReportsController extends GetxController {
     fetchAllTransactions(selectedYear.value, selectedMonth.value);
   }
 
+  void calculateTotals() {
+    totalIncome.value = allTransactions
+        .where((t) => t['type'] == 'income')
+        .fold(0.0, (sum, t) => sum + t['amount']);
+
+    totalOutcome.value = allTransactions
+        .where((t) => t['type'] == 'outcome')
+        .fold(0.0, (sum, t) => sum + t['amount']);
+  }
+
+  void groupDataByType() {
+    groupedIncomeData.value = allTransactions
+        .where((transaction) => transaction['type'] == 'income')
+        .fold<Map<String, double>>({}, (map, transaction) {
+          String title = transaction['title'];
+          double amount = transaction['amount'];
+          map[title] = (map[title] ?? 0) + amount;
+          return map;
+        })
+        .entries
+        .map((entry) => {'title': entry.key, 'amount': entry.value})
+        .toList();
+
+    groupedOutcomeData.value = allTransactions
+        .where((transaction) => transaction['type'] == 'outcome')
+        .fold<Map<String, double>>({}, (map, transaction) {
+          String title = transaction['title'];
+          double amount = transaction['amount'];
+          map[title] = (map[title] ?? 0) + amount;
+          return map;
+        })
+        .entries
+        .map((entry) => {'title': entry.key, 'amount': entry.value})
+        .toList();
+  }
+
+  void processWeeklyData() {
+    // Reset data mingguan
+    weeklyIncomeData.value = List<double>.filled(4, 0.0, growable: false);
+    weeklyOutcomeData.value = List<double>.filled(4, 0.0, growable: false);
+
+    for (var transaction in allTransactions) {
+      // Parse tanggal transaksi untuk mendapatkan minggu
+      DateTime date = DateTime.parse(transaction['transaction_date']);
+      int weekIndex = (date.day - 1) ~/ 7; // Minggu ke-0, 1, 2, 3
+
+      if (transaction['type'] == 'income') {
+        weeklyIncomeData[weekIndex] += transaction['amount'];
+      } else if (transaction['type'] == 'outcome') {
+        weeklyOutcomeData[weekIndex] += transaction['amount'];
+      }
+    }
+    // Update observables
+    weeklyIncomeData.refresh();
+    weeklyOutcomeData.refresh();
+  }
+
+  List<Color> generateBrightColors(int count) {
+    return List<Color>.generate(count, (index) {
+      double hue = (index * 360 / count) % 360; // Sebar warna dalam spektrum
+      return HSVColor.fromAHSV(1, hue, 0.8, 0.9).toColor(); // Warna terang
+    });
+  }
+
+  void groupMonthlyDataByTitle() {
+    // Map untuk menyimpan hasil pengelompokan
+    Map<String, double> groupedData = {};
+
+    for (var transaction in allTransactions) {
+      String title = transaction['title'];
+      double amount = transaction['amount'];
+
+      if (groupedData.containsKey(title)) {
+        // Jika title sudah ada, tambahkan jumlahnya
+        groupedData[title] = groupedData[title]! + amount;
+      } else {
+        // Jika belum, inisialisasi jumlahnya
+        groupedData[title] = amount;
+      }
+    }
+
+    // Ubah map menjadi list agar dapat digunakan di UI
+    monthlyGroupedData.value = groupedData.entries
+        .map((entry) => {'title': entry.key, 'amount': entry.value})
+        .toList();
+  }
+
   double getMaxY() {
     double maxIncome = weeklyIncomeData.isNotEmpty
         ? weeklyIncomeData.reduce((a, b) => a > b ? a : b)
@@ -54,6 +148,15 @@ class ReportsController extends GetxController {
     double maxValue = maxIncome > maxOutcome ? maxIncome : maxOutcome;
 
     return maxValue + (maxValue * 0.1); // Tambahkan margin 10%
+  }
+
+  List<Map<String, dynamic>> filterTransactionsByType(String type) {
+    return allTransactions.where((t) => t['type'] == type).toList();
+  }
+
+  void updateFormattedValues(String income, String outcome) {
+    formattedIncome.value = income;
+    formattedOutcome.value = outcome;
   }
 
   void updateMonth(String selectedFilter) {
@@ -74,23 +177,15 @@ class ReportsController extends GetxController {
 
     selectedMonth.value = monthNames[selectedFilter] ?? DateTime.now().month;
     fetchFilteredData();
-    fetchFilteredDataByType();
   }
 
   void updateYear(int selectedYearValue) {
     selectedYear.value = selectedYearValue;
     fetchFilteredData();
-    fetchFilteredDataByType();
   }
 
   void toggleTransactionType(String type) {
     selectedType.value = type;
-    // Panggil fungsi untuk mengambil data berdasarkan tipe
-    fetchFilteredDataByType();
-  }
-
-  Future <void> fetchFilteredDataByType()async{
-    fetchTransactionsByType(selectedYear.value, selectedMonth.value,selectedType.value);
   }
 
   Future<void> fetchFilteredData() async {
@@ -120,110 +215,24 @@ class ReportsController extends GetxController {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final transactions = data['transactions'] as List;
-        final incomeTransactions =
-            transactions.where((t) => t['type'] == 'income').toList();
-        final outcomeTransactions =
-            transactions.where((t) => t['type'] == 'outcome').toList();
 
-        allIncomeData.value = incomeTransactions.map((t) {
-          var amount = t['amount'];
-          if (amount is int) {
-            return amount.toDouble();
-          } else if (amount is double) {
-            return amount;
-          } else {
-            return 0.0;
-          }
-        }).toList();
+        // Simpan semua transaksi dalam allTransactions
+        allTransactions.value = transactions
+            .map((t) => {
+                  'title': t['title'],
+                  'type': t['type'],
+                  'amount':
+                      t['amount'] is int ? t['amount'].toDouble() : t['amount'],
+                  'transaction_date': t['transaction_date'],
+                  'description': t['description'],
+                  'category': t['category'],
+                })
+            .toList();
 
-        allOutcomeData.value = outcomeTransactions.map((t) {
-          var amount = t['amount'];
-          if (amount is int) {
-            return amount.toDouble();
-          } else if (amount is double) {
-            return amount;
-          } else {
-            return 0.0;
-          }
-        }).toList();
-
-        totalIncome.value = allIncomeData.fold(0.0, (sum, t) => sum + t);
-        totalOutcome.value = allOutcomeData.fold(0.0, (sum, t) => sum + t);
-
-        List<double> incomeWeekly = List.filled(4, 0.0);
-        List<double> outcomeWeekly = List.filled(4, 0.0);
-
-        for (var t in incomeTransactions) {
-          final date = DateTime.parse(t['transaction_date']);
-          final weekIndex = (date.day ~/ 7);
-          incomeWeekly[weekIndex] += t['amount'].toDouble();
-        }
-
-        for (var t in outcomeTransactions) {
-          final date = DateTime.parse(t['transaction_date']);
-          final weekIndex = (date.day ~/ 7);
-          outcomeWeekly[weekIndex] += t['amount'].toDouble();
-        }
-
-        weeklyIncomeData.value = incomeWeekly;
-        weeklyOutcomeData.value = outcomeWeekly;
-      } else {
-        throw Exception('Failed to load monthly report');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan saat mengambil data: $e');
-    }
-  }
-
-  Future<void> fetchTransactionsByType(int year, int month, String type) async {
-    final url = Uri.parse(
-        'http://10.0.2.2:3005/transaction/monthly-report?year=$year&month=$month');
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('token');
-
-      if (token == null) {
-        Get.snackbar('Error', 'Token tidak ditemukan. Silakan login kembali.');
-        return;
-      }
-
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final transactions = data['transactions'] as List;
-
-        // Filter transactions based on the provided type
-        final filteredTransactions =
-            transactions.where((t) => t['type'] == type).toList();
-
-        // Set the filtered data to respective variables
-        if (type == 'income') {
-          allIncomeData.value = filteredTransactions.map((t) {
-            var amount = t['amount'];
-            return amount is int
-                ? amount.toDouble()
-                : amount is double
-                    ? amount
-                    : 0.0;
-          }).toList();
-        } else if (type == 'outcome') {
-          allOutcomeData.value = filteredTransactions.map((t) {
-            var amount = t['amount'];
-            return amount is int
-                ? amount.toDouble()
-                : amount is double
-                    ? amount
-                    : 0.0;
-          }).toList();
-        }
-
+        calculateTotals();
+        processWeeklyData();
+        groupMonthlyDataByTitle();
+        groupDataByType();
       } else {
         throw Exception('Failed to load monthly report');
       }
