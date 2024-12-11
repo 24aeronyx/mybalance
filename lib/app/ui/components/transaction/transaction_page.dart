@@ -30,14 +30,14 @@ class TransactionList extends StatelessWidget {
                   // Logo/Icon and Text
                   Row(
                     children: [
-                      // Transaction Icon
+                      // Transaction Icon based on category (Income/Outcome)
                       CircleAvatar(
                         backgroundColor: const Color.fromARGB(255, 214, 232, 255),
                         radius: 20,
                         child: Icon(
-                          transaction.transactionType == 'Groceries'
-                              ? FontAwesome.cart_shopping_solid
-                              : FontAwesome.wallet_solid,
+                          transaction.type == 'income'
+                              ? FontAwesome.arrow_right_solid
+                              : FontAwesome.arrow_left_solid,
                           size: 20,
                           color: AppColors.primary,
                         ),
@@ -68,11 +68,11 @@ class TransactionList extends StatelessWidget {
                   ),
                   // Amount
                   Text(
-                    '${transaction.category == 'Income' ? '+' : '-'} Rp. ${transaction.amount.toStringAsFixed(2)}',
+                    '${transaction.type == 'income' ? '+' : '-'} Rp. ${transaction.amount.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: FontSize.large,
                       fontWeight: FontWeight.w600,
-                      color: transaction.category == 'Income'
+                      color: transaction.type == 'income'
                           ? AppColors.income
                           : AppColors.outcome,
                     ),

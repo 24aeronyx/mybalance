@@ -43,7 +43,7 @@ class ReportsController extends GetxController {
     super.onInit();
     fetchAllTransactions(selectedYear.value, selectedMonth.value);
   }
-  
+
   double getMaxY() {
     double maxIncome = weeklyIncomeData.isNotEmpty
         ? weeklyIncomeData.reduce((a, b) => a > b ? a : b)
@@ -54,21 +54,6 @@ class ReportsController extends GetxController {
     double maxValue = maxIncome > maxOutcome ? maxIncome : maxOutcome;
 
     return maxValue + (maxValue * 0.1); // Tambahkan margin 10%
-  }
-
-  void updateSelectedType(String type) {
-    selectedType.value = type;
-    fetchFilteredData();
-  }
-
-  Future<void> fetchFilteredDatabyType() async {
-    if (selectedType.value == 'income') {
-      weeklyIncomeData.value = allIncomeData;
-      weeklyOutcomeData.value = [];
-    } else {
-      weeklyOutcomeData.value = allOutcomeData;
-      weeklyIncomeData.value = [];
-    }
   }
 
   void updateMonth(String selectedFilter) {
@@ -89,18 +74,23 @@ class ReportsController extends GetxController {
 
     selectedMonth.value = monthNames[selectedFilter] ?? DateTime.now().month;
     fetchFilteredData();
+    fetchFilteredDataByType();
   }
 
   void updateYear(int selectedYearValue) {
     selectedYear.value = selectedYearValue;
     fetchFilteredData();
+    fetchFilteredDataByType();
   }
 
-  void filterTransactions(int selectedYearValue, int selectedMonthValue) {
-    filteredTransactions.value = allTransactions.where((transaction) {
-      return transaction.date.year == selectedYearValue &&
-          transaction.date.month == selectedMonthValue;
-    }).toList();
+  void toggleTransactionType(String type) {
+    selectedType.value = type;
+    // Panggil fungsi untuk mengambil data berdasarkan tipe
+    fetchFilteredDataByType();
+  }
+
+  Future <void> fetchFilteredDataByType()async{
+    fetchTransactionsByType(selectedYear.value, selectedMonth.value,selectedType.value);
   }
 
   Future<void> fetchFilteredData() async {
@@ -177,6 +167,63 @@ class ReportsController extends GetxController {
 
         weeklyIncomeData.value = incomeWeekly;
         weeklyOutcomeData.value = outcomeWeekly;
+      } else {
+        throw Exception('Failed to load monthly report');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Terjadi kesalahan saat mengambil data: $e');
+    }
+  }
+
+  Future<void> fetchTransactionsByType(int year, int month, String type) async {
+    final url = Uri.parse(
+        'http://10.0.2.2:3005/transaction/monthly-report?year=$year&month=$month');
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        Get.snackbar('Error', 'Token tidak ditemukan. Silakan login kembali.');
+        return;
+      }
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final transactions = data['transactions'] as List;
+
+        // Filter transactions based on the provided type
+        final filteredTransactions =
+            transactions.where((t) => t['type'] == type).toList();
+
+        // Set the filtered data to respective variables
+        if (type == 'income') {
+          allIncomeData.value = filteredTransactions.map((t) {
+            var amount = t['amount'];
+            return amount is int
+                ? amount.toDouble()
+                : amount is double
+                    ? amount
+                    : 0.0;
+          }).toList();
+        } else if (type == 'outcome') {
+          allOutcomeData.value = filteredTransactions.map((t) {
+            var amount = t['amount'];
+            return amount is int
+                ? amount.toDouble()
+                : amount is double
+                    ? amount
+                    : 0.0;
+          }).toList();
+        }
+
       } else {
         throw Exception('Failed to load monthly report');
       }

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:mybalance/app/models/transaction_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
   var fullName = ''.obs;
   var balance = ''.obs;
+  var latestTransactionList = <Transaction>[].obs; // Make it observable
 
   Future<void> fetchProfile() async {
     final url = Uri.parse('http://10.0.2.2:3005/profile');
@@ -50,4 +52,47 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> fetchLatestTransactions() async {
+    final url = Uri.parse('http://10.0.2.2:3005/transaction/get-history');
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        Get.snackbar('Error', 'Token tidak ditemukan. Silakan login kembali.');
+        return;
+      }
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final transactions = data['transactions'] as List;
+
+        // Pemetaan transaksi yang diterima
+        final latestTransactions = transactions.map((t) {
+          return Transaction(
+            title: t['title'],
+            category: t['category'],
+            type: t['type'],
+            date: DateTime.parse(t['transaction_date']),
+            amount: t['amount'].toDouble(),
+          );
+        }).toList();
+
+        // Ambil 10 transaksi terbaru
+        latestTransactionList.value = latestTransactions.take(10).toList();
+      } else {
+        throw Exception('Failed to load transactions');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Terjadi kesalahan saat mengambil data: $e');
+    }
+  }
 }

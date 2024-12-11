@@ -4,110 +4,21 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:mybalance/app/ui/components/transaction/transaction_page.dart';
 import 'package:mybalance/app/ui/pages/home/home_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
-import 'package:mybalance/app/models/transaction_model.dart';
 
 class HomePage extends GetView<HomeController> {
-  static const IconData settingsOutlined =
-      IconData(0xf36e, fontFamily: 'MaterialIcons');
 
-  HomePage({super.key});
-
-  final List<Transaction> transactions = [
-    Transaction(
-      title: 'Grocery Shopping',
-      category: 'Outcome',
-      transactionType: 'Groceries',
-      date: DateTime.now(),
-      amount: 35000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-    Transaction(
-      title: 'Salary',
-      category: 'Income',
-      transactionType: 'Salary',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      amount: 5000,
-    ),
-  ];
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     controller.fetchProfile();
-    
+    controller.fetchLatestTransactions();
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: AppBar(
-          backgroundColor: AppColors.secondary,
+          backgroundColor: AppColors.secondary, // Pasti
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -207,7 +118,7 @@ class HomePage extends GetView<HomeController> {
                       Container(
                         height: 60,
                         width: 1,
-                        color: const Color.fromRGBO(255, 255, 255, 0.4),
+                        color: AppColors.secondary,
                       ),
                       const Column(
                         children: [
@@ -238,7 +149,11 @@ class HomePage extends GetView<HomeController> {
                               fontWeight: FontWeight.w600)),
                     ),
                     const SizedBox(height: 10),
-                    TransactionList(transactions: transactions),
+                    Obx(() {
+                      return TransactionList(
+                        transactions: controller.latestTransactionList.value,
+                      );
+                    })
                   ],
                 ),
               ),
