@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:mybalance/app/models/transaction_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,7 +38,9 @@ class HomeController extends GetxController {
       ]);
 
       // Jika data tidak ditemukan
-      if (fullName.value.isEmpty || balance.value.isEmpty || latestTransactionList.isEmpty) {
+      if (fullName.value.isEmpty ||
+          balance.value.isEmpty ||
+          latestTransactionList.isEmpty) {
         dataNotFound.value = true;
       }
     } catch (e) {
@@ -71,7 +74,10 @@ class HomeController extends GetxController {
         final data = jsonDecode(response.body);
         if (data['profile']?['full_name'] != null) {
           fullName.value = data['profile']['full_name'];
-          balance.value = data['profile']['balance'].toString();
+
+          // Format the balance to Indonesian currency format
+          double rawBalance = data['profile']['balance'].toDouble();
+          balance.value = _formatCurrency(rawBalance); // Format balance
         } else {
           dataNotFound.value = true;
         }
@@ -83,6 +89,16 @@ class HomeController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
     }
+  }
+
+// Format the balance in Indonesian currency format
+  String _formatCurrency(double amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID', // Indonesian locale
+      symbol: 'Rp', // Currency symbol
+      decimalDigits: 2, // Number of decimal digits
+    );
+    return formatCurrency.format(amount);
   }
 
   Future<void> fetchLatestTransactions() async {
@@ -109,15 +125,18 @@ class HomeController extends GetxController {
         final transactions = data['transactions'] as List;
 
         if (transactions.isNotEmpty) {
-          latestTransactionList.value = transactions.map((t) {
-            return Transaction(
-              title: t['title'],
-              category: t['category'],
-              type: t['type'],
-              date: DateTime.parse(t['transaction_date']),
-              amount: t['amount'].toDouble(),
-            );
-          }).take(10).toList();
+          latestTransactionList.value = transactions
+              .map((t) {
+                return Transaction(
+                  title: t['title'],
+                  category: t['category'],
+                  type: t['type'],
+                  date: DateTime.parse(t['transaction_date']),
+                  amount: t['amount'].toDouble(),
+                );
+              })
+              .take(10)
+              .toList();
         } else {
           dataNotFound.value = true;
         }

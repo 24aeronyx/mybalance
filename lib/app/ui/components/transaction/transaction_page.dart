@@ -12,76 +12,73 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: transactions.length,
-        itemBuilder: (context, index) {
-          final transaction = transactions[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: AppColors.secondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Logo/Icon and Text
-                  Row(
-                    children: [
-                      // Transaction Icon based on category (Income/Outcome)
-                      CircleAvatar(
-                        backgroundColor: const Color.fromARGB(255, 214, 232, 255),
-                        radius: 20,
-                        child: Icon(
-                          _getTransactionIcon(transaction),
-                          size: 20,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Title and Date
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transaction.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            DateFormat('MMM d, yyyy • h:mm a').format(transaction.date),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  // Amount
-                  Text(
-                    '${transaction.type == 'income' ? '+' : '-'} Rp. ${transaction.amount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
-                      color: transaction.type == 'income'
-                          ? AppColors.income
-                          : AppColors.outcome,
-                    ),
-                  ),
-                ],
-              ),
+    return Column(
+      children: List.generate(transactions.length, (index) {
+        final transaction = transactions[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.secondary,
+              borderRadius: BorderRadius.circular(12),
             ),
-          );
-        },
-      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Logo/Icon and Text
+                Row(
+                  children: [
+                    // Transaction Icon based on category (Income/Outcome)
+                    CircleAvatar(
+                      backgroundColor: const Color.fromARGB(255, 214, 232, 255),
+                      radius: 20,
+                      child: Icon(
+                        _getTransactionIcon(transaction),
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Title and Date
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          transaction.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          DateFormat('MMM d, yyyy • h:mm a').format(transaction.date),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                // Amount with Indonesian currency format
+                Text(
+                  '${transaction.type == 'income' ? '+' : '-'} ${_formatCurrency(transaction.amount)}',
+                  style: TextStyle(
+                    fontSize: FontSize.large,
+                    fontWeight: FontWeight.w600,
+                    color: transaction.type == 'income'
+                        ? AppColors.income
+                        : AppColors.outcome,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 
@@ -114,5 +111,15 @@ class TransactionList extends StatelessWidget {
           return FontAwesome.wrench_solid; // Default outcome icon
       }
     }
+  }
+
+  // Format the amount in Indonesian currency format
+  String _formatCurrency(double amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'id_ID', // Indonesian locale
+      symbol: 'Rp', // Currency symbol
+      decimalDigits: 2, // Number of decimal digits
+    );
+    return formatCurrency.format(amount);
   }
 }

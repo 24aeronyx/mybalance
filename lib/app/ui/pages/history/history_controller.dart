@@ -8,10 +8,14 @@ class HistoryController extends GetxController {
   var isLoading = true.obs;
   var dataNotFound = false.obs;
   var latestTransactionList = <Transaction>[].obs;
-  var groupedTransactions =
-      <String, List<Transaction>>{}.obs; // Data per tanggal
+  var groupedTransactions = <String, List<Transaction>>{}.obs;
+
+  // Tambahkan variabel untuk filter
+  var selectedDate = Rxn<DateTime>();
+  var searchTitle = ''.obs;
 
   Future<void> fetchLatestTransactions() async {
+    isLoading.value = true;
     final url = Uri.parse('http://10.0.2.2:3005/transaction/history');
 
     try {
@@ -30,52 +34,79 @@ class HistoryController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load transactions: ${response.statusCode}');
+      }
+
+      final data = json.decode(response.body);
+
+      if (data.containsKey('transactions') && data['transactions'] is List) {
         final transactions = data['transactions'] as List;
 
-        if (transactions.isNotEmpty) {
-          // Proses transaksi
-          latestTransactionList.value = transactions
-              .map((t) {
-                return Transaction(
-                  title: t['title'],
-                  category: t['category'],
-                  type: t['type'],
-                  date: DateTime.parse(t['transaction_date']),
-                  amount: t['amount'].toDouble(),
-                );
-              })
-              .take(10)
-              .toList();
-
-          // Grouping by date
-          groupTransactionsByDate();
-        } else {
+        if (transactions.isEmpty) {
           dataNotFound.value = true;
+        } else {
+          latestTransactionList.value = transactions.map((t) {
+            return Transaction(
+              title: t['title'] ?? 'Untitled',
+              category: t['category'] ?? 'Uncategorized',
+              type: t['type'] ?? 'Unknown',
+              date: DateTime.parse(
+                  t['transaction_date'] ?? DateTime.now().toString()),
+              amount: (t['amount'] ?? 0.0).toDouble(),
+            );
+          }).toList();
+
+          groupTransactionsByDate();
         }
       } else {
-        throw Exception('Gagal memuat transaksi: ${response.statusCode}');
+        throw Exception('Missing or invalid "transactions" data');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      Get.snackbar('Error', 'An error occurred: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
+  // Fungsi untuk mengelompokkan transaksi dan memfilter berdasarkan tanggal atau judul
   void groupTransactionsByDate() {
-    // Bersihkan data grup sebelumnya
     groupedTransactions.clear();
 
-    for (var transaction in latestTransactionList) {
-      String formattedDate = transaction.date
-          .toIso8601String()
-          .split('T')[0]; // Format 'YYYY-MM-DD'
+    List<Transaction> filteredTransactions = latestTransactionList;
 
-      if (!groupedTransactions.containsKey(formattedDate)) {
-        groupedTransactions[formattedDate] = [];
-      }
-      groupedTransactions[formattedDate]!.add(transaction);
+    // Filter based on date
+    if (selectedDate.value != null) {
+      filteredTransactions = filteredTransactions.where((t) {
+        return t.date.year == selectedDate.value!.year &&
+            t.date.month == selectedDate.value!.month &&
+            t.date.day == selectedDate.value!.day;
+      }).toList();
     }
+
+    // Filter based on title
+    if (searchTitle.value.isNotEmpty) {
+      filteredTransactions = filteredTransactions.where((t) {
+        return t.title.toLowerCase().contains(searchTitle.value.toLowerCase());
+      }).toList();
+    }
+
+    // Group transactions by date
+    Map<String, List<Transaction>> tempGroupedTransactions = {};
+
+    for (var transaction in filteredTransactions) {
+      String formattedDate = transaction.date.toIso8601String().split('T')[0];
+
+      if (!tempGroupedTransactions.containsKey(formattedDate)) {
+        tempGroupedTransactions[formattedDate] = [];
+      }
+      tempGroupedTransactions[formattedDate]!.add(transaction);
+    }
+
+    // Convert Map<String, List<Transaction>> to RxMap<String, RxList<Transaction>>
+    tempGroupedTransactions.forEach((key, value) {
+      groupedTransactions[key] = value.obs; // Use .obs to convert to RxList
+    });
   }
 
   void handleInvalidToken() {
