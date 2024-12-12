@@ -8,9 +8,11 @@ import 'package:mybalance/app/ui/pages/history/history_binding.dart';
 import 'package:mybalance/app/ui/pages/history/history_page.dart';
 import 'package:mybalance/app/ui/pages/home/home_binding.dart';
 import 'package:mybalance/app/ui/pages/home/home_page.dart';
+import 'package:mybalance/app/ui/pages/income/income_binding.dart';
 import 'package:mybalance/app/ui/pages/income/income_page.dart';
 import 'package:mybalance/app/ui/pages/login/login_page.dart';
 import 'package:mybalance/app/ui/pages/main/main_page.dart';
+import 'package:mybalance/app/ui/pages/outcome/outcome_binding.dart';
 import 'package:mybalance/app/ui/pages/outcome/outcome_page.dart';
 import 'package:mybalance/app/ui/pages/profile/profile_binding.dart';
 import 'package:mybalance/app/ui/pages/profile/profile_page.dart';
@@ -47,7 +49,8 @@ class AppRoutes {
         name: home,
         page: () => const HomePage(),
         bindings: [HomeBinding(), BottomNavBinding()]),
-    GetPage(name: income, page: () => const IncomePage()),
+    GetPage(
+        name: income, page: () => const IncomePage(), binding: IncomeBinding()),
     GetPage(name: login, page: () => const LoginPage()),
     GetPage(name: main, page: () => MainPage(), bindings: [
       BottomNavBinding(),
@@ -56,7 +59,10 @@ class AppRoutes {
       HistoryBinding(),
       ProfileBinding()
     ]),
-    GetPage(name: outcome, page: () => const OutcomePage()),
+    GetPage(
+        name: outcome,
+        page: () => const OutcomePage(),
+        binding: OutcomeBinding()),
     GetPage(name: profile, page: () => const ProfilePage()),
     GetPage(name: register, page: () => const RegisterPage()),
     GetPage(name: reports, page: () => const ReportsPage()),

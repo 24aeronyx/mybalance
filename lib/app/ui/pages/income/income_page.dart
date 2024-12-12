@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:mybalance/app/utils/color.dart';
+import 'package:mybalance/app/utils/text.dart';
 import 'package:mybalance/app/ui/pages/income/income_controller.dart';
 
 class IncomePage extends GetView<IncomeController> {
@@ -8,33 +11,72 @@ class IncomePage extends GetView<IncomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Income')),
+      appBar: AppBar(
+        title: const Text(
+          "Add Income",
+          style: TextStyle(
+            fontSize: FontSize.extraLarge,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primary,
+          ),
+        ),
+        backgroundColor: AppColors.secondary,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Amount'),
+              // Amount Input
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "Amount",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primary),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   controller.amount.value = double.tryParse(value) ?? 0.0;
                 },
               ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Description'),
+              const SizedBox(height: 20),
+
+              // Description Input
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primary),
+                  ),
+                ),
+                keyboardType: TextInputType.text,
                 onChanged: (value) {
                   controller.description.value = value;
                 },
               ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Title'),
+              const SizedBox(height: 20),
+
+              // Title Input
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "Title",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primary),
+                  ),
+                ),
                 onChanged: (value) {
                   controller.title.value = value;
                 },
               ),
+              const SizedBox(height: 20),
+
+              // Category Dropdown
               DropdownButtonFormField<String>(
-                value: controller.category.value.isEmpty ? null : controller.category.value,
+                value: controller.category.value.isEmpty
+                    ? null
+                    : controller.category.value,
                 onChanged: (newCategory) {
                   controller.category.value = newCategory ?? '';
                 },
@@ -44,20 +86,72 @@ class IncomePage extends GetView<IncomeController> {
                           child: Text(category),
                         ))
                     .toList(),
-                decoration: const InputDecoration(labelText: 'Category'),
-              ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
-                onChanged: (value) {
-                  controller.date.value = value;
-                },
+                decoration: const InputDecoration(
+                  labelText: "Category",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primary),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  controller.addIncome();
+
+              GestureDetector(
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  );
+                  if (pickedDate != null) {
+                    controller.date.value =
+                        '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                  }
                 },
-                child: const Text('Add Income'),
+                child: AbsorbPointer(
+                  child: Obx(() => TextFormField(
+                        controller:
+                            TextEditingController(text: controller.date.value),
+                        decoration: const InputDecoration(
+                          labelText: "Transaction Date (yyyy-mm-dd)",
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.primary),
+                          ),
+                          suffixIcon: Icon(
+                            BoxIcons.bx_calendar,
+                            size: 30,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      )),
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Add Income Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.addIncome();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    "Add Income",
+                    style: TextStyle(
+                      fontSize: FontSize.large,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

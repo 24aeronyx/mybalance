@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IncomeController extends GetxController {
   // Form fields
@@ -18,6 +19,10 @@ class IncomeController extends GetxController {
     'Freelance',
   ];
 
+  // Latest transactions list
+  var latestTransactionList = <Transaction>[].obs;
+  var dataNotFound = false.obs;
+
   // API request to add income
   Future<void> addIncome() async {
     // Validate category
@@ -33,11 +38,23 @@ class IncomeController extends GetxController {
       return;
     }
 
-    // Send the request
     try {
+      // Retrieve token from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');  // Replace 'token' with your actual key
+
+      if (token == null) {
+        Get.snackbar('Error', 'Token not found. Please login again.');
+        return;
+      }
+
+      // Send the request with the token in the Authorization header
       final response = await http.post(
-        Uri.parse('https://your-api-endpoint.com/income'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('http://10.0.2.2:3005/transaction/income'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',  // Add token in the Authorization header
+        },
         body: jsonEncode({
           'amount': amount.value,
           'description': description.value,
@@ -50,10 +67,79 @@ class IncomeController extends GetxController {
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Income added successfully');
       } else {
-        Get.snackbar('Error', 'Failed to add income');
+        Get.snackbar('Error', 'Failed to add income. Status Code: ${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');
     }
   }
+
+  // Fetch latest transactions
+  Future<void> fetchLatestTransactions() async {
+    final url = Uri.parse('http://10.0.2.2:3005/transaction/history');
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      if (token == null) {
+        handleInvalidToken();
+        return;
+      }
+
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final transactions = data['transactions'] as List;
+
+        if (transactions.isNotEmpty) {
+          latestTransactionList.value = transactions
+              .map((t) {
+                return Transaction(
+                  title: t['title'],
+                  category: t['category'],
+                  type: t['type'],
+                  date: DateTime.parse(t['transaction_date']),
+                  amount: t['amount'].toDouble(),
+                );
+              })
+              .take(10)
+              .toList();
+        } else {
+          dataNotFound.value = true;
+        }
+      } else {
+        throw Exception('Failed to load transactions: ${response.statusCode}');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred: $e');
+    }
+  }
+
+  void handleInvalidToken() {
+    Get.snackbar('Error', 'Token is invalid. Please login again.');
+    Get.offAllNamed('/login');
+  }
+}
+
+class Transaction {
+  final String title;
+  final String category;
+  final String type;
+  final DateTime date;
+  final double amount;
+
+  Transaction({
+    required this.title,
+    required this.category,
+    required this.type,
+    required this.date,
+    required this.amount,
+  });
 }
