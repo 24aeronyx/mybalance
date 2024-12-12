@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mybalance/app/ui/components/bottom_nav/bottom_nav_binding.dart';
 import 'package:mybalance/app/ui/pages/about/about_page.dart';
 import 'package:mybalance/app/ui/pages/editpassword/editpassword_page.dart';
+import 'package:mybalance/app/ui/pages/editprofile/editprofile_binding.dart';
 import 'package:mybalance/app/ui/pages/editprofile/editprofile_page.dart';
 import 'package:mybalance/app/ui/pages/history/history_binding.dart';
 import 'package:mybalance/app/ui/pages/history/history_page.dart';
@@ -11,6 +12,7 @@ import 'package:mybalance/app/ui/pages/income/income_page.dart';
 import 'package:mybalance/app/ui/pages/login/login_page.dart';
 import 'package:mybalance/app/ui/pages/main/main_page.dart';
 import 'package:mybalance/app/ui/pages/outcome/outcome_page.dart';
+import 'package:mybalance/app/ui/pages/profile/profile_binding.dart';
 import 'package:mybalance/app/ui/pages/profile/profile_page.dart';
 import 'package:mybalance/app/ui/pages/register/register_page.dart';
 import 'package:mybalance/app/ui/pages/reports/reports_binding.dart';
@@ -36,7 +38,10 @@ class AppRoutes {
   static List<GetPage> routes = [
     GetPage(name: about, page: () => const AboutPage()),
     GetPage(name: editPassword, page: () => const EditpasswordPage()),
-    GetPage(name: editProfile, page: () => const EditprofilePage()),
+    GetPage(
+        name: editProfile,
+        page: () => const EditprofilePage(),
+        binding: EditprofileBinding()),
     GetPage(name: history, page: () => const HistoryPage()),
     GetPage(
         name: home,
@@ -48,7 +53,8 @@ class AppRoutes {
       BottomNavBinding(),
       HomeBinding(),
       ReportsBinding(),
-      HistoryBinding()
+      HistoryBinding(),
+      ProfileBinding()
     ]),
     GetPage(name: outcome, page: () => const OutcomePage()),
     GetPage(name: profile, page: () => const ProfilePage()),

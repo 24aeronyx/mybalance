@@ -142,7 +142,9 @@ class HomePage extends GetView<HomeController> {
                             ),
                             SizedBox(height: 10),
                             Text('Add Income',
-                                style: TextStyle(color: Colors.white)),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: FontSize.large)),
                           ],
                         ),
                         Container(
@@ -159,7 +161,9 @@ class HomePage extends GetView<HomeController> {
                             ),
                             SizedBox(height: 10),
                             Text('Add Outcome',
-                                style: TextStyle(color: Colors.white)),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: FontSize.large)),
                           ],
                         ),
                       ],
