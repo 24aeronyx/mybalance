@@ -31,6 +31,7 @@ class AppRoutes {
   static const String register = '/register';
   static const String reports = '/reports';
   static const String settings = '/settings';
+  static const String checkToken = '/check-token';
 
   static List<GetPage> routes = [
     GetPage(name: about, page: () => const AboutPage()),
@@ -43,12 +44,14 @@ class AppRoutes {
         bindings: [HomeBinding(), BottomNavBinding()]),
     GetPage(name: income, page: () => const IncomePage()),
     GetPage(name: login, page: () => const LoginPage()),
-    GetPage(name: main, page: () => MainPage(), bindings: [ BottomNavBinding(), HomeBinding(), ReportsBinding(), HistoryBinding()
+    GetPage(name: main, page: () => MainPage(), bindings: [
+      BottomNavBinding(),
+      HomeBinding(),
+      ReportsBinding(),
+      HistoryBinding()
     ]),
     GetPage(name: outcome, page: () => const OutcomePage()),
-    GetPage(
-        name: profile,
-        page: () => const ProfilePage()),
+    GetPage(name: profile, page: () => const ProfilePage()),
     GetPage(name: register, page: () => const RegisterPage()),
     GetPage(name: reports, page: () => const ReportsPage()),
     GetPage(name: settings, page: () => const SettingsPage()),

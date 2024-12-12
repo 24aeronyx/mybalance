@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mybalance/app/middleware/check-token.dart';
 import 'package:mybalance/app/routes/app_routes.dart';
 import 'package:mybalance/app/utils/color.dart';
 
@@ -19,16 +20,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        title: 'My Balance',
-        theme: ThemeData(
-          primaryColor: AppColors.primary,
-          scaffoldBackgroundColor: AppColors.secondary,
-          fontFamily: 'DM Sans',
-          useMaterial3: true,
+      title: 'My Balance',
+      theme: ThemeData(
+        primaryColor: AppColors.primary,
+        scaffoldBackgroundColor: AppColors.secondary,
+        fontFamily: 'DM Sans',
+        useMaterial3: true,
+      ),
+      initialRoute: AppRoutes.checkToken, // Set route ke middleware
+      getPages: [
+        ...AppRoutes.routes,
+        GetPage(
+          name: AppRoutes.checkToken,
+          page: () => const CheckTokenPage(),
         ),
-        initialRoute: AppRoutes.main,
-        getPages: AppRoutes.routes,
-        debugShowCheckedModeBanner: false)
-        ;
+      ],
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
