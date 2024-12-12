@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:mybalance/app/ui/pages/editprofile/editprofile_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
 import 'package:mybalance/app/utils/text.dart';
@@ -16,6 +17,7 @@ class EditprofilePage extends GetView<EditProfileController> {
           style: TextStyle(
             fontSize: FontSize.extraLarge,
             fontWeight: FontWeight.w600,
+            color: AppColors.primary
           ),
         ),
         backgroundColor: AppColors.secondary,
@@ -65,8 +67,7 @@ class EditprofilePage extends GetView<EditProfileController> {
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: AppColors.primary),
                         ),
-                        suffixIcon: Icon(Icons.calendar_today,
-                            color: AppColors.primary),
+                        suffixIcon: Icon(BoxIcons.bx_calendar, size: 30, color: AppColors.primary,),
                       ),
                     ),
                   ),

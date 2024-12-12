@@ -13,7 +13,7 @@ class AboutPage extends StatelessWidget {
         title: const Text(
           'About',
           style: TextStyle(
-              fontSize: FontSize.extraLarge, fontWeight: FontWeight.w600),
+              fontSize: FontSize.extraLarge, fontWeight: FontWeight.w600, color: AppColors.primary),
         ),
         backgroundColor: AppColors.secondary,
         elevation: 0,

@@ -32,12 +32,12 @@ class HomePage extends GetView<HomeController> {
                     height: 30,
                     fit: BoxFit.cover,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 4),
                   const Text(
                     'MyBalance',
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: FontSize.extraLarge),
+                        fontSize: FontSize.extraLarge, color: AppColors.primary),
                   )
                 ],
               ),
@@ -133,38 +133,48 @@ class HomePage extends GetView<HomeController> {
                       direction: Axis.horizontal,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Column(
-                          children: [
-                            Icon(
-                              FontAwesome.sack_dollar_solid,
-                              color: Colors.white,
-                              size: 40,
-                            ),
-                            SizedBox(height: 10),
-                            Text('Add Income',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: FontSize.large)),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed('/income'); // Navigate to /income route
+                          },
+                          child: const Column(
+                            children: [
+                              Icon(
+                                FontAwesome.sack_dollar_solid,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text('Add Income',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: FontSize.large)),
+                            ],
+                          ),
                         ),
                         Container(
                           height: 60,
                           width: 1,
                           color: AppColors.secondary,
                         ),
-                        const Column(
-                          children: [
-                            Icon(
-                              FontAwesome.sack_xmark_solid,
-                              color: Colors.white,
-                              size: 40,
-                            ),
-                            SizedBox(height: 10),
-                            Text('Add Outcome',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: FontSize.large)),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed('/outcome'); // Navigate to /outcome route
+                          },
+                          child: const Column(
+                            children: [
+                              Icon(
+                                FontAwesome.sack_xmark_solid,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                              SizedBox(height: 10),
+                              Text('Add Outcome',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: FontSize.large)),
+                            ],
+                          ),
                         ),
                       ],
                     ),

@@ -38,7 +38,7 @@ class ProfilePage extends GetView<ProfileController> {
                   padding: EdgeInsets.all(20),
                   child: Text(
                     'Profile',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.primary),
                   )),
             ),
           ),
