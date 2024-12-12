@@ -33,46 +33,54 @@ class HistoryPage extends GetView<HistoryController> {
       body: SingleChildScrollView(
         // Wrap the body with SingleChildScrollView
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               // Filter by date
-            
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Search by Title',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    controller.searchTitle.value = value;
-                    controller.groupTransactionsByDate();
-                  },
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: AppColors.third
+                          .withOpacity(0.5)), // Border dengan warna abu-abu
+                  borderRadius:
+                      BorderRadius.circular(8), // Sudut border melengkung
                 ),
-             
-
-              // Spacer to push the filter button to the right
-              const SizedBox(width: 10),
-
-              // Filter by Date Button with logo on the right
-              Row(children: [
-                IconButton(
-                  icon: const Icon(BoxIcons.bx_calendar, size: 24),
-                  onPressed: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (pickedDate != null) {
-                      controller.selectedDate.value = pickedDate;
-                      controller.groupTransactionsByDate();
-                    }
-                  },
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8), // Padding dalam container
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Search by Title',
+                          border: InputBorder.none, // Hapus border bawaan
+                        ),
+                        onChanged: (value) {
+                          controller.searchTitle.value = value;
+                          controller.groupTransactionsByDate();
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(BoxIcons.bx_calendar, size: 30),
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedDate != null) {
+                          controller.selectedDate.value = pickedDate;
+                          controller.groupTransactionsByDate();
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                // Optionally you can add an image logo or other widget here
-              ]),
+              ),
 
+              const SizedBox(height: 20),
               // Display transactions
               Obx(() {
                 var groupedTransactions =
@@ -109,10 +117,24 @@ class HistoryPage extends GetView<HistoryController> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: Text(
-                                formattedDate,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    formattedDate,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                      width: 8), // Space between text and line
+                                  Expanded(
+                                    child: Container(
+                                      height: 1,
+                                      color: AppColors.third.withOpacity(
+                                          0.5), // Color of the separator line
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             // Directly place TransactionList inside the Column

@@ -4,6 +4,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:mybalance/app/ui/components/transaction/transaction_page.dart';
 import 'package:mybalance/app/ui/pages/home/home_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
+import 'package:mybalance/app/utils/text.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -15,7 +16,7 @@ class HomePage extends GetView<HomeController> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90),
+        preferredSize: const Size.fromHeight(70),
         child: AppBar(
           backgroundColor: AppColors.secondary,
           flexibleSpace: SafeArea(
@@ -23,24 +24,21 @@ class HomePage extends GetView<HomeController> {
               padding: const EdgeInsets.all(20),
               child: Flex(
                 direction: Axis.horizontal,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image.asset(
                     'assets/icons/Mybe.png',
-                    width: 40,
-                    height: 40,
+                    width: 30,
+                    height: 30,
                     fit: BoxFit.cover,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: const Color.fromRGBO(0, 0, 0, 0.3)),
-                    ),
-                    child: const Icon(BoxIcons.bx_cog,
-                        size: 30, color: Colors.black),
-                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'MyBalance',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: FontSize.extraLarge),
+                  )
                 ],
               ),
             ),
@@ -122,8 +120,7 @@ class HomePage extends GetView<HomeController> {
                     }),
                   ],
                 ),
-                const SizedBox(height: 20),
-                // Add Income / Add Outcome Buttons
+
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Container(
@@ -144,7 +141,8 @@ class HomePage extends GetView<HomeController> {
                               size: 40,
                             ),
                             SizedBox(height: 10),
-                            Text('Add Income', style: TextStyle(color: Colors.white)),
+                            Text('Add Income',
+                                style: TextStyle(color: Colors.white)),
                           ],
                         ),
                         Container(
@@ -160,7 +158,8 @@ class HomePage extends GetView<HomeController> {
                               size: 40,
                             ),
                             SizedBox(height: 10),
-                            Text('Add Outcome', style: TextStyle(color: Colors.white)),
+                            Text('Add Outcome',
+                                style: TextStyle(color: Colors.white)),
                           ],
                         ),
                       ],
@@ -191,4 +190,3 @@ class HomePage extends GetView<HomeController> {
     );
   }
 }
-

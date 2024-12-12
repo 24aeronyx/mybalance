@@ -3,6 +3,29 @@ import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:mybalance/app/utils/color.dart';
 
+final List<Map<String, dynamic>> menuItems = [
+  {
+    'icon': Icons.lock_reset,
+    'iconColor': Colors.blue,
+    'title': 'Forgot Password',
+    'subtitle': 'Reset your account password',
+    'route': '/forgot-password',
+  },
+  {
+    'icon': BoxIcons.bxs_log_out_circle,
+    'iconColor': Colors.red,
+    'title': 'Logout',
+    'subtitle': 'Sign out from your account',
+    'route': '/login',
+  },
+  {
+    'icon': BoxIcons.bxs_info_circle,
+    'iconColor': Colors.amber,
+    'title': 'About App',
+    'subtitle': 'Details about MyBalance',
+    'route': '/about',
+  },
+];
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -88,62 +111,29 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Column(
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.lock_reset, color: Colors.blue, size: 30,),
-                      title: const Text(
-                        'Forgot Password',
-                        style: TextStyle(
+                  children: menuItems.map((item) {
+                    return ListTile(
+                      leading: Icon(item['icon'],
+                          color: item['iconColor'], size: 30),
+                      title: Text(
+                        item['title'],
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
-                      subtitle: const Text(
-                        'Reset your account password',
-                        style: TextStyle(
+                      subtitle: Text(
+                        item['subtitle'],
+                        style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w300),
                       ),
                       onTap: () {
-                        // Aksi ketika item di-tap
-                        Get.toNamed('/forgot-password'); // Contoh navigasi
+                        Get.toNamed(item['route']);
                       },
-                    ),
-                    ListTile(
-                      leading: const Icon(BoxIcons.bxs_log_out_circle, color: Colors.red, size: 30),
-                      title: const Text(
-                        'Logout',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: const Text(
-                        'Sign out from your account',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w300),
-                      ),
-                      onTap: () {
-                        // Aksi ketika item di-tap
-                        Get.toNamed('/login');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(BoxIcons.bxs_info_circle, color: Colors.amber, size: 30),
-                      title: const Text(
-                        'About App',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: const Text(
-                        'Details about MyBalance ',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w300),
-                      ),
-                      onTap: () {
-                        // Aksi ketika item di-tap
-                        Get.toNamed('/about');
-                      },
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
               ),
             ],
