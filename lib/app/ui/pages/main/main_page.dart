@@ -10,23 +10,23 @@ import 'package:mybalance/app/ui/pages/profile/profile_page.dart';
 class MainPage extends GetView<BottomNavController> {
   MainPage({super.key});
 
-  final List<Widget> pages = [
-    const HomePage(),
-    const ReportsPage(),
-    const HistoryPage(),
-    const ProfilePage(),
+  final List<Widget Function()> pageBuilders = [
+    () => const HomePage(),
+    () => const ReportsPage(),
+    () => const HistoryPage(),
+    () => const ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-
     return Obx(
       () => Scaffold(
-        body: IndexedStack(
-          index: controller.selectedIndex.value,
-          children: pages,
+        body: pageBuilders[controller.selectedIndex.value](), 
+        bottomNavigationBar: BottomNavBar(
+          onTap: (index) {
+            controller.selectedIndex.value = index;
+          },
         ),
-        bottomNavigationBar: const BottomNavBar(), // Tambahan widget navigasi bawah
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:mybalance/app/utils/color.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class BottomNavBar extends GetView<BottomNavController> {
-  const BottomNavBar({super.key});
+  const BottomNavBar({super.key, required Null Function(dynamic index) onTap});
 
   @override
   Widget build(BuildContext context) {

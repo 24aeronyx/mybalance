@@ -17,6 +17,14 @@ class ProfileController extends GetxController {
     fetchProfile(); // Memanggil fungsi fetchProfile() saat halaman pertama kali diinisialisasi
   }
 
+  void reset() {
+    fullName.value = '';
+    dateOfBirth.value = '';
+    phoneNumber.value = ''; // Clear the list
+    address.value = '';
+    dataNotFound.value = false;
+  }
+
   Future<void> fetchProfile() async {
     final url = Uri.parse('http://10.0.2.2:3005/profile');
 

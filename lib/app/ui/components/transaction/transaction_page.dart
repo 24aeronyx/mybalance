@@ -48,7 +48,7 @@ class TransactionList extends StatelessWidget {
                           transaction.title,
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -68,7 +68,7 @@ class TransactionList extends StatelessWidget {
                   '${transaction.type == 'income' ? '+' : '-'} ${_formatCurrency(transaction.amount)}',
                   style: TextStyle(
                     fontSize: FontSize.large,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w400,
                     color: transaction.type == 'income'
                         ? AppColors.income
                         : AppColors.outcome,

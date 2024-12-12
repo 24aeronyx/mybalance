@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mybalance/app/ui/pages/editprofile/editprofile_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
-import 'package:mybalance/app/utils/text.dart'; // Replace with actual path to controller
+import 'package:mybalance/app/utils/text.dart';
 
 class EditprofilePage extends GetView<EditProfileController> {
   const EditprofilePage({super.key});
@@ -11,20 +11,18 @@ class EditprofilePage extends GetView<EditProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Profile",
-            style: TextStyle(
-                fontSize: FontSize.extraLarge, fontWeight: FontWeight.w600)),
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(
+            fontSize: FontSize.extraLarge,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: AppColors.secondary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(
-                child: CircularProgressIndicator()); // Tampilkan loading
-          }
-
-          // Menangani jika data profil tidak ditemukan
           if (controller.dataNotFound.value) {
             return const Center(child: Text('Profile not found'));
           }
@@ -45,17 +43,35 @@ class EditprofilePage extends GetView<EditProfileController> {
                 ),
                 const SizedBox(height: 20),
 
-                // Date of Birth Input
-                TextFormField(
-                  controller: controller.dobController,
-                  decoration: const InputDecoration(
-                    labelText: "Date of Birth (yyyy-mm-dd)",
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primary),
+                // Date of Birth Input (with Date Picker)
+                GestureDetector(
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (pickedDate != null) {
+                      controller.dobController.text =
+                          '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      controller: controller.dobController,
+                      decoration: const InputDecoration(
+                        labelText: "Date of Birth (yyyy-mm-dd)",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.primary),
+                        ),
+                        suffixIcon: Icon(Icons.calendar_today,
+                            color: AppColors.primary),
+                      ),
                     ),
                   ),
-                  keyboardType: TextInputType.datetime,
                 ),
+
                 const SizedBox(height: 20),
 
                 // Phone Number Input
@@ -85,52 +101,56 @@ class EditprofilePage extends GetView<EditProfileController> {
                 const SizedBox(height: 30),
 
                 // Save Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Get values from the text controllers
-                    String fullName = controller.fullNameController.text;
-                    String dateOfBirth = controller.dobController.text;
-                    String phoneNumber = controller.phoneController.text;
-                    String address = controller.addressController.text;
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      String fullName = controller.fullNameController.text;
+                      String dateOfBirth = controller.dobController.text;
+                      String phoneNumber = controller.phoneController.text;
+                      String address = controller.addressController.text;
 
-                    // Call the updateProfile function and handle result
-                    controller
-                        .updateProfile(
-                      fullName: fullName,
-                      dateOfBirth: dateOfBirth,
-                      phoneNumber: phoneNumber,
-                      address: address,
-                    )
-                        .then((success) {
-                      if (success) {
-                        Get.snackbar(
-                          'Success',
-                          'Profile updated successfully',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                        );
-                      } else {
-                        Get.snackbar(
-                          'Error',
-                          'Failed to update profile',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary, // Button color
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      controller
+                          .updateProfile(
+                        fullName: fullName,
+                        dateOfBirth: dateOfBirth,
+                        phoneNumber: phoneNumber,
+                        address: address,
+                      )
+                          .then((success) {
+                        if (success) {
+                          Get.snackbar(
+                            'Success',
+                            'Profile updated successfully',
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        } else {
+                          Get.snackbar(
+                            'Error',
+                            'Failed to update profile',
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    textStyle: const TextStyle(
+                    child: const Text(
+                      "Save Changes",
+                      style: TextStyle(
                         fontSize: FontSize.large,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white),
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  child: const Text("Save Changes"),
                 ),
               ],
             ),

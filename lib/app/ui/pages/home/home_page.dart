@@ -11,8 +11,8 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchProfile();
-    controller.fetchLatestTransactions();
+    controller.reset();
+    controller.fetchData();
 
     return Scaffold(
       appBar: PreferredSize(

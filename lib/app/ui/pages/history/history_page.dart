@@ -40,8 +40,7 @@ class HistoryPage extends GetView<HistoryController> {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: AppColors.third
-                          .withOpacity(0.5)), // Border dengan warna abu-abu
+                      color: AppColors.primary), // Border dengan warna abu-abu
                   borderRadius:
                       BorderRadius.circular(8), // Sudut border melengkung
                 ),
@@ -62,7 +61,7 @@ class HistoryPage extends GetView<HistoryController> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(BoxIcons.bx_calendar, size: 30),
+                      icon: const Icon(BoxIcons.bx_calendar, size: 30, color: AppColors.primary,),
                       onPressed: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -123,15 +122,14 @@ class HistoryPage extends GetView<HistoryController> {
                                     formattedDate,
                                     style: const TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold, color: AppColors.primary),
                                   ),
                                   const SizedBox(
                                       width: 8), // Space between text and line
                                   Expanded(
                                     child: Container(
                                       height: 1,
-                                      color: AppColors.third.withOpacity(
-                                          0.5), // Color of the separator line
+                                      color: AppColors.primary // Color of the separator line
                                     ),
                                   ),
                                 ],

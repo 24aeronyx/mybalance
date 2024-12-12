@@ -18,6 +18,14 @@ class HomeController extends GetxController {
     fetchData();
   }
 
+  void reset() {
+    fullName.value = '';
+    balance.value = '';
+    latestTransactionList.clear(); // Clear the list
+    isLoading.value = true;
+    dataNotFound.value = false;
+  }
+
   Future<void> fetchData() async {
     isLoading.value = true;
     dataNotFound.value = false;
