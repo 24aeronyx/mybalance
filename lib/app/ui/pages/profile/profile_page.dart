@@ -5,13 +5,6 @@ import 'package:mybalance/app/utils/color.dart';
 
 final List<Map<String, dynamic>> menuItems = [
   {
-    'icon': Icons.lock_reset,
-    'iconColor': Colors.blue,
-    'title': 'Forgot Password',
-    'subtitle': 'Reset your account password',
-    'route': '/forgot-password',
-  },
-  {
     'icon': BoxIcons.bxs_log_out_circle,
     'iconColor': Colors.red,
     'title': 'Logout',
