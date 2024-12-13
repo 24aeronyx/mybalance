@@ -12,9 +12,6 @@ class RegisterPage extends GetView<RegisterController> {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
     final fullNameController = TextEditingController();
-    final dateOfBirthController = TextEditingController();
-    final phoneNumberController = TextEditingController();
-    final addressController = TextEditingController();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -141,72 +138,6 @@ class RegisterPage extends GetView<RegisterController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: dateOfBirthController,
-                decoration: InputDecoration(
-                  labelText: 'Date of Birth',
-                  hintText: 'Enter your date of birth (YYYY-MM-DD)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                      width: 2.0,
-                    ),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.calendar_today,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: phoneNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Phone Number',
-                  hintText: 'Enter your phone number',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                      width: 2.0,
-                    ),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.phone,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: addressController,
-                decoration: InputDecoration(
-                  labelText: 'Address',
-                  hintText: 'Enter your address',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                      width: 2.0,
-                    ),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.home,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
@@ -214,21 +145,16 @@ class RegisterPage extends GetView<RegisterController> {
                   final username = usernameController.text.trim();
                   final password = passwordController.text.trim();
                   final fullName = fullNameController.text.trim();
-                  final dateOfBirth = dateOfBirthController.text.trim();
-                  final phoneNumber = phoneNumberController.text.trim();
-                  final address = addressController.text.trim();
 
                   if (email.isNotEmpty &&
                       username.isNotEmpty &&
                       password.isNotEmpty) {
                     controller.register(
-                        email,
-                        username,
-                        password,
-                        fullName,
-                        dateOfBirth,
-                        phoneNumber,
-                        address);
+                      email,
+                      username,
+                      password,
+                      fullName,
+                    );
                   } else {
                     Get.snackbar('Error', 'All fields are required');
                   }

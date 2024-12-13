@@ -21,7 +21,7 @@ class HomeController extends GetxController {
   void reset() {
     fullName.value = '';
     balance.value = '';
-    latestTransactionList.clear(); 
+    latestTransactionList.clear();
     isLoading.value = true;
     dataNotFound.value = false;
   }
@@ -31,7 +31,7 @@ class HomeController extends GetxController {
     dataNotFound.value = false;
 
     // Timeout jika lebih dari 10 detik
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 20), () {
       if (isLoading.value) {
         Get.snackbar('Error', 'Gagal memuat data, silakan login kembali.');
         Get.offAllNamed('/login');
@@ -45,9 +45,7 @@ class HomeController extends GetxController {
       ]);
 
       // Jika data tidak ditemukan
-      if (fullName.value.isEmpty ||
-          balance.value.isEmpty ||
-          latestTransactionList.isEmpty) {
+      if (fullName.value.isEmpty) {
         dataNotFound.value = true;
       }
     } catch (e) {
@@ -147,8 +145,6 @@ class HomeController extends GetxController {
         } else {
           dataNotFound.value = true;
         }
-      } else {
-        throw Exception('Gagal memuat transaksi: ${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar('Error', 'Terjadi kesalahan: $e');

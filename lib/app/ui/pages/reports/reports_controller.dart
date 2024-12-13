@@ -51,6 +51,22 @@ class ReportsController extends GetxController {
     fetchAllTransactions(selectedYear.value, selectedMonth.value);
   }
 
+  void reset() {
+    totalIncome.value = 0.0;
+    totalOutcome.value = 0.0;
+    weeklyIncomeData.value = List<double>.filled(4, 0.0, growable: false);
+    weeklyOutcomeData.value = List<double>.filled(4, 0.0, growable: false);
+    monthlyGroupedData.clear();
+    groupedIncomeData.clear();
+    groupedOutcomeData.clear();
+    filteredTransactions.clear();
+    allTransactions.clear();
+    selectedType.value = 'income';
+    formattedIncome.value = '';
+    formattedOutcome.value = '';
+    allTransactionsByTitle.value = {};
+  }
+
   void calculateTotals() {
     totalIncome.value = allTransactions
         .where((t) => t['type'] == 'income')

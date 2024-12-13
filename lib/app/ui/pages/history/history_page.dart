@@ -12,8 +12,8 @@ class HistoryPage extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.reset();
     controller.fetchLatestTransactions();
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -24,7 +24,10 @@ class HistoryPage extends GetView<HistoryController> {
               padding: EdgeInsets.all(20),
               child: Text(
                 'History',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.primary),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary),
               ),
             ),
           ),
@@ -39,10 +42,10 @@ class HistoryPage extends GetView<HistoryController> {
               // Filter by date
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.primary), 
-                  borderRadius: BorderRadius.circular(8), 
+                  border: Border.all(color: AppColors.primary),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8), 
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: [
                     Expanded(
@@ -58,7 +61,8 @@ class HistoryPage extends GetView<HistoryController> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(BoxIcons.bx_calendar, size: 30, color: AppColors.primary),
+                      icon: const Icon(BoxIcons.bx_calendar,
+                          size: 30, color: AppColors.primary),
                       onPressed: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -74,10 +78,13 @@ class HistoryPage extends GetView<HistoryController> {
                     ),
                     // Show Clear button only if a filter is active
                     Obx(() {
-                      bool isFilterActive = controller.searchTitle.value.isNotEmpty || controller.selectedDate.value != null;
+                      bool isFilterActive =
+                          controller.searchTitle.value.isNotEmpty ||
+                              controller.selectedDate.value != null;
                       return isFilterActive
                           ? IconButton(
-                              icon: const Icon(Icons.refresh, size: 30, color: AppColors.primary),
+                              icon: const Icon(Icons.refresh,
+                                  size: 30, color: AppColors.primary),
                               onPressed: () {
                                 // Clear both search and selected date filters
                                 controller.searchTitle.value = '';
@@ -85,7 +92,8 @@ class HistoryPage extends GetView<HistoryController> {
                                 controller.groupTransactionsByDate();
                               },
                             )
-                          : const SizedBox.shrink(); // Hide button when no filter is applied
+                          : const SizedBox
+                              .shrink(); // Hide button when no filter is applied
                     }),
                   ],
                 ),
@@ -105,7 +113,8 @@ class HistoryPage extends GetView<HistoryController> {
                 return Column(
                   children: groupedTransactions.keys.map((date) {
                     // Ensure that the transactions list is never null
-                    List<Transaction> transactions = groupedTransactions[date] ?? [];
+                    List<Transaction> transactions =
+                        groupedTransactions[date] ?? [];
 
                     // Skip empty date groups
                     if (transactions.isEmpty) {
@@ -117,9 +126,11 @@ class HistoryPage extends GetView<HistoryController> {
                         DateFormat('EEEE, dd MMM yyyy').format(parsedDate);
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 10), // Add space between date sections
+                      padding: const EdgeInsets.only(
+                          bottom: 10), // Add space between date sections
                       child: SizedBox(
-                        width: double.infinity, // Ensure full width within the padding
+                        width: double
+                            .infinity, // Ensure full width within the padding
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -131,13 +142,16 @@ class HistoryPage extends GetView<HistoryController> {
                                     formattedDate,
                                     style: const TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold, color: AppColors.primary),
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primary),
                                   ),
-                                  const SizedBox(width: 8), // Space between text and line
+                                  const SizedBox(
+                                      width: 8), // Space between text and line
                                   Expanded(
                                     child: Container(
                                       height: 1,
-                                      color: AppColors.primary, // Color of the separator line
+                                      color: AppColors
+                                          .primary, // Color of the separator line
                                     ),
                                   ),
                                 ],

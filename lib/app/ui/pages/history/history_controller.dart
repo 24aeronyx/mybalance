@@ -14,6 +14,18 @@ class HistoryController extends GetxController {
   var selectedDate = Rxn<DateTime>();
   var searchTitle = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchLatestTransactions();
+  }
+
+  void reset() {
+    latestTransactionList.clear();
+    isLoading.value = true;
+    dataNotFound.value = false;
+  }
+
   Future<void> fetchLatestTransactions() async {
     isLoading.value = true;
     final url = Uri.parse('http://10.0.2.2:3005/transaction/history');
@@ -33,10 +45,6 @@ class HistoryController extends GetxController {
           'Authorization': 'Bearer $token',
         },
       );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to load transactions: ${response.statusCode}');
-      }
 
       final data = json.decode(response.body);
 
@@ -59,8 +67,6 @@ class HistoryController extends GetxController {
 
           groupTransactionsByDate();
         }
-      } else {
-        throw Exception('Missing or invalid "transactions" data');
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');

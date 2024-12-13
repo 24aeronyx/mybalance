@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RegisterController extends GetxController {
-  var isLoading = false.obs;  // Untuk mengatur status loading
+  var isLoading = false.obs; // Untuk mengatur status loading
   var isPasswordVisible = false.obs; // Variable untuk visibilitas password
 
   // Fungsi untuk toggle visibilitas password
@@ -16,18 +16,44 @@ class RegisterController extends GetxController {
     String username,
     String password,
     String fullName,
-    String dateOfBirth,
-    String phoneNumber,
-    String address,
   ) async {
-    if (email.isEmpty ||
-        username.isEmpty ||
-        password.isEmpty ||
-        fullName.isEmpty ||
-        dateOfBirth.isEmpty ||
-        phoneNumber.isEmpty ||
-        address.isEmpty) {
-      Get.snackbar('Error', 'All fields are required');
+    // Validasi input email
+    if (email.isEmpty) {
+      Get.snackbar('Error', 'Email is required');
+      return;
+    }
+    if (!email.contains('@') || !isValidEmail(email)) {
+      Get.snackbar('Error', 'Please provide a valid email address');
+      return;
+    }
+
+    // Validasi username
+    if (username.isEmpty || username.length < 3) {
+      Get.snackbar('Error', 'Username must be at least 3 characters long');
+      return;
+    }
+
+    // Validasi password
+    if (password.isEmpty) {
+      Get.snackbar('Error', 'Password is required');
+      return;
+    }
+    if (password.length < 8) {
+      Get.snackbar('Error', 'Password must be at least 8 characters long');
+      return;
+    }
+    if (!password.contains(RegExp(r'\d'))) {
+      Get.snackbar('Error', 'Password must contain at least one number');
+      return;
+    }
+    if (!password.contains(RegExp(r'[A-Z]'))) {
+      Get.snackbar('Error', 'Password must contain at least one uppercase letter');
+      return;
+    }
+
+    // Validasi full name
+    if (fullName.isEmpty) {
+      Get.snackbar('Error', 'Full name is required');
       return;
     }
 
@@ -42,14 +68,12 @@ class RegisterController extends GetxController {
           'username': username,
           'password': password,
           'full_name': fullName,
-          'date_of_birth': dateOfBirth,
-          'phone_number': phoneNumber,
-          'address': address,
         }),
       );
 
       isLoading.value = false; // Mengatur status loading menjadi false setelah request selesai
       if (response.statusCode == 201) {
+        // ignore: unused_local_variable
         final data = jsonDecode(response.body);
         Get.snackbar('Success', 'User registered successfully');
         Get.offNamed('/login'); // Arahkan pengguna ke halaman login setelah sukses
@@ -60,5 +84,11 @@ class RegisterController extends GetxController {
       isLoading.value = false;
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
     }
+  }
+
+  // Fungsi validasi email (Anda bisa menggunakan regex untuk validasi email)
+  bool isValidEmail(String email) {
+    final regex = RegExp(r'^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+    return regex.hasMatch(email);
   }
 }

@@ -37,7 +37,8 @@ class HomePage extends GetView<HomeController> {
                     'MyBalance',
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: FontSize.extraLarge, color: AppColors.primary),
+                        fontSize: FontSize.extraLarge,
+                        color: AppColors.primary),
                   )
                 ],
               ),
@@ -159,7 +160,8 @@ class HomePage extends GetView<HomeController> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.toNamed('/outcome'); // Navigate to /outcome route
+                            Get.toNamed(
+                                '/outcome'); // Navigate to /outcome route
                           },
                           child: const Column(
                             children: [
@@ -191,10 +193,24 @@ class HomePage extends GetView<HomeController> {
                 ),
                 const SizedBox(height: 10),
                 Obx(() {
-                  return TransactionList(
-                    // ignore: invalid_use_of_protected_member
-                    transactions: controller.latestTransactionList.value,
-                  );
+                  // Cek jika daftar transaksi kosong
+                  // ignore: invalid_use_of_protected_member
+                  if (controller.latestTransactionList.value.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No transactions found.',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey),
+                      ),
+                    );
+                  } else {
+                    return TransactionList(
+                      // ignore: invalid_use_of_protected_member
+                      transactions: controller.latestTransactionList.value,
+                    );
+                  }
                 }),
               ],
             ),

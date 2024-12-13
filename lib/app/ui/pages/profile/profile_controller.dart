@@ -14,7 +14,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchProfile(); // Memanggil fungsi fetchProfile() saat halaman pertama kali diinisialisasi
+    fetchProfile(); 
   }
 
   void reset() {

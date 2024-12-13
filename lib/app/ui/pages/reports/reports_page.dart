@@ -37,6 +37,8 @@ class ReportsPage extends GetView<ReportsController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.reset();
+    controller.fetchAllTransactions(controller.selectedYear.value, controller.selectedMonth.value);
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
