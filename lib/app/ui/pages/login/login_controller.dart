@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class LoginController extends GetxController {
     }
 
     isLoading.value = true;
-    final url = Uri.parse('http://10.0.2.2:3005/auth/login');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/login');
     try {
       final response = await http.post(
         url,

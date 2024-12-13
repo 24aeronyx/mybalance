@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mybalance/app/ui/pages/profile/profile_controller.dart';
@@ -34,7 +35,7 @@ class EditProfileController extends GetxController {
 
   // Fetch Profile
   Future<void> fetchProfile() async {
-    final url = Uri.parse('http://10.0.2.2:3005/profile');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/profile');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -160,7 +161,7 @@ class EditProfileController extends GetxController {
       return false;
     }
 
-    final url = Uri.parse('http://10.0.2.2:3005/profile');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/profile');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

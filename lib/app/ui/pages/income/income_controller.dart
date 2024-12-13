@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -50,7 +51,7 @@ class IncomeController extends GetxController {
 
       // Send the request with the token in the Authorization header
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:3005/transaction/income'),
+        Uri.parse('${dotenv.env['BASE_URL']}/transaction/income'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',  // Add token in the Authorization header
@@ -76,7 +77,7 @@ class IncomeController extends GetxController {
 
   // Fetch latest transactions
   Future<void> fetchLatestTransactions() async {
-    final url = Uri.parse('http://10.0.2.2:3005/transaction/history');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}:3005/transaction/history');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();

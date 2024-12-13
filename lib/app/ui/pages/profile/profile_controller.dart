@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> fetchProfile() async {
-    final url = Uri.parse('http://10.0.2.2:3005/profile');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/profile');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,7 +99,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse('http://10.0.2.2:3005/auth/logout');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/logout');
     try {
       final response = await http.post(url);
       if (response.statusCode == 200) {

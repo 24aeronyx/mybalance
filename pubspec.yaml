@@ -38,7 +38,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   fl_chart: ^0.69.2
   animated_toggle_switch: ^0.8.3
-
+  flutter_dotenv: ^5.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -71,6 +71,7 @@ flutter:
     - assets/icons/MyBe-White.png
     - assets/icons/Mybe.png
     - assets/icons/Aero.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

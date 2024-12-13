@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -58,7 +59,7 @@ class RegisterController extends GetxController {
     }
 
     isLoading.value = true; // Mengatur status loading menjadi true
-    final url = Uri.parse('http://10.0.2.2:3005/auth/register');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/register');
     try {
       final response = await http.post(
         url,

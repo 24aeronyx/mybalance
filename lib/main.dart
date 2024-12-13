@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mybalance/app/middleware/check-token.dart';
 import 'package:mybalance/app/routes/app_routes.dart';
 import 'package:mybalance/app/utils/color.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

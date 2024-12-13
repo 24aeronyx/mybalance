@@ -91,8 +91,15 @@ class HomePage extends GetView<HomeController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Obx(() {
+                          // Limit full name to a maximum of 20 characters
+                          String fullNameDisplay = controller
+                                  .fullName.value.isNotEmpty
+                              ? controller.fullName.value.length > 12
+                                  ? '${controller.fullName.value.substring(0, 12)}...'
+                                  : controller.fullName.value
+                              : 'User';
                           return Text(
-                            'Hello ${controller.fullName.value.isNotEmpty ? controller.fullName.value : 'User'},',
+                            'Hello $fullNameDisplay,',
                             style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,

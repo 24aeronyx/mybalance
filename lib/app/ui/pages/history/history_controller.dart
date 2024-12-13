@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:mybalance/app/models/transaction_model.dart';
@@ -28,7 +29,7 @@ class HistoryController extends GetxController {
 
   Future<void> fetchLatestTransactions() async {
     isLoading.value = true;
-    final url = Uri.parse('http://10.0.2.2:3005/transaction/history');
+    final url = Uri.parse('${dotenv.env['BASE_URL']}/transaction/history');
 
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
