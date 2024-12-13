@@ -185,7 +185,7 @@ class HomePage extends GetView<HomeController> {
                   alignment: Alignment.centerLeft,
                   child: Text('Latest Transaction',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.primary,
                           fontSize: 20,
                           fontWeight: FontWeight.w600)),
                 ),

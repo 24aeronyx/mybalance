@@ -1,43 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mybalance/app/ui/pages/login/login_controller.dart';
 import 'package:mybalance/app/utils/color.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({super.key});
-
-  // Fungsi untuk login
-  Future<void> login(String emailOrUsername, String password) async {
-    final url = Uri.parse('http://10.0.2.2:3005/auth/login'); 
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'emailOrUsername': emailOrUsername,
-          'password': password,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['token'] != null) {
-          // Simpan token ke shared preferences
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', data['token']);
-          Get.offAllNamed('/main'); // Navigasi ke halaman utama
-        } else {
-          Get.snackbar('Error', 'Token tidak ditemukan');
-        }
-      } else {
-        Get.snackbar('Error', 'Login gagal: ${response.statusCode}');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +15,7 @@ class LoginPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(20),
         child: Container(
-          decoration: const BoxDecoration(color: Colors.white),
+          decoration: const BoxDecoration(color: AppColors.secondary),
         ),
       ),
       body: SingleChildScrollView(
@@ -71,10 +38,6 @@ class LoginPage extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('to',
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                  SizedBox(width: 3),
                   Text(
                     'MyBalance',
                     style: TextStyle(
@@ -108,44 +71,49 @@ class LoginPage extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: AppColors.primary,
-                      width: 2.0,
+              Obx(() => TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: AppColors.primary,
+                          width: 2.0,
+                        ),
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.lock,
+                        color: AppColors.primary,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.isPasswordVisible.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: () {
+                          controller.togglePasswordVisibility();
+                        },
+                      ),
                     ),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.lock,
-                    color: AppColors.primary,
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.visibility,
-                        color: AppColors.primary),
-                    onPressed: () {
-                      // Tambahkan logika untuk menampilkan/mengganti visibilitas password
-                    },
-                  ),
-                ),
-                obscureText: true,
-              ),
+                    obscureText: !controller.isPasswordVisible.value,
+                  )),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
                   final email = emailController.text.trim();
                   final password = passwordController.text.trim();
                   if (email.isNotEmpty && password.isNotEmpty) {
-                    login(email, password); // Panggil fungsi login
+                    controller.login(
+                        email, password); // Call login function from controller
                   } else {
-                    Get.snackbar('Error', 'Email dan password wajib diisi');
+                    Get.snackbar('Error', 'Email and password are required');
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -163,6 +131,39 @@ class LoginPage extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: Colors.white),
                 ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account?",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight
+                          .normal, // Pastikan konsisten dengan teks lainnya
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.toNamed('/register'); // Navigate to the register page
+                    },
+                    style: TextButton.styleFrom(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 2), // Menghapus padding default tombol
+                      minimumSize:
+                          const Size(0, 0), // Menghapus ukuran minimum tombol
+                    ),
+                    child: const Text(
+                      "Sign up now",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -12,6 +12,9 @@ final List<Map<String, dynamic>> menuItems = [
     'title': 'Logout',
     'subtitle': 'Sign out from your account',
     'route': '/login',
+    'onTap': (ProfileController controller) {
+      controller.logout();
+    },
   },
   {
     'icon': BoxIcons.bxs_info_circle,
@@ -38,7 +41,10 @@ class ProfilePage extends GetView<ProfileController> {
                   padding: EdgeInsets.all(20),
                   child: Text(
                     'Profile',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.primary),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary),
                   )),
             ),
           ),
@@ -119,7 +125,11 @@ class ProfilePage extends GetView<ProfileController> {
                             fontSize: 14, fontWeight: FontWeight.w300),
                       ),
                       onTap: () {
-                        Get.toNamed(item['route']);
+                        if (item.containsKey('onTap')) {
+                          item['onTap'](controller);
+                        } else if (item.containsKey('route')) {
+                          Get.toNamed(item['route']);
+                        }
                       },
                     );
                   }).toList(),

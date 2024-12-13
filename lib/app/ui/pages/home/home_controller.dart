@@ -21,7 +21,7 @@ class HomeController extends GetxController {
   void reset() {
     fullName.value = '';
     balance.value = '';
-    latestTransactionList.clear(); // Clear the list
+    latestTransactionList.clear(); 
     isLoading.value = true;
     dataNotFound.value = false;
   }
@@ -39,7 +39,6 @@ class HomeController extends GetxController {
     });
 
     try {
-      // Ambil profil dan transaksi secara bersamaan
       await Future.wait([
         fetchProfile(),
         fetchLatestTransactions(),

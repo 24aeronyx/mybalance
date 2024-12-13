@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:mybalance/app/ui/pages/profile/profile_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
 import 'package:intl/intl.dart';
 
 class EditProfileController extends GetxController {
@@ -23,6 +23,8 @@ class EditProfileController extends GetxController {
   var dobError = ''.obs;
   var phoneError = ''.obs;
   var addressError = ''.obs;
+
+  final profileController = Get.find<ProfileController>();
 
   @override
   void onInit() {
@@ -75,6 +77,7 @@ class EditProfileController extends GetxController {
           dobController.text = dateOfBirth.value;
           phoneController.text = phoneNumber.value;
           addressController.text = address.value;
+        
         } else {
           dataNotFound.value = true;
         }
@@ -191,5 +194,9 @@ class EditProfileController extends GetxController {
       Get.snackbar('Error', 'Error occurred while updating profile: $e');
       return false;
     }
+  }
+
+   Future<void> refreshMainProfile() async {
+    await profileController.fetchProfile();
   }
 }

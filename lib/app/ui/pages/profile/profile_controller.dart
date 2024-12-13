@@ -96,4 +96,23 @@ class ProfileController extends GetxController {
     ];
     return months[month - 1];
   }
+
+  Future<void> logout() async {
+    final url = Uri.parse('http://10.0.2.2:3005/auth/logout');
+    try {
+      final response = await http.post(url);
+      if (response.statusCode == 200) {
+        // Clear token from SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('token');
+
+        // Navigate to login page
+        Get.offAllNamed('/login');
+      } else {
+        Get.snackbar('Error', 'Logout gagal: ${response.statusCode}');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    }
+  }
 }

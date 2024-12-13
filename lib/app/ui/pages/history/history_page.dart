@@ -39,10 +39,10 @@ class HistoryPage extends GetView<HistoryController> {
               // Filter by date
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.primary), // Border with primary color
-                  borderRadius: BorderRadius.circular(8), // Rounded corners
+                  border: Border.all(color: AppColors.primary), 
+                  borderRadius: BorderRadius.circular(8), 
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8), // Padding inside the container
+                padding: const EdgeInsets.symmetric(horizontal: 8), 
                 child: Row(
                   children: [
                     Expanded(
