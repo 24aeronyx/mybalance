@@ -24,20 +24,12 @@ class ReportsController extends GetxController {
   RxString formattedIncome = ''.obs;
   RxString formattedOutcome = ''.obs;
   RxMap<String, List<double>> allTransactionsByTitle = RxMap({});
+  RxBool dataNotFound = false.obs;
+  var isLoading = true.obs;
 
   final filters = <String>[
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   final years = <int>[
@@ -66,6 +58,8 @@ class ReportsController extends GetxController {
     formattedIncome.value = '';
     formattedOutcome.value = '';
     allTransactionsByTitle.value = {};
+    dataNotFound.value = false;
+    isLoading.value = true;
   }
 
   void calculateTotals() {
@@ -222,6 +216,8 @@ class ReportsController extends GetxController {
         return;
       }
 
+      isLoading.value = true; // Show loading
+
       final response = await http.get(
         url,
         headers: {
@@ -232,6 +228,13 @@ class ReportsController extends GetxController {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final transactions = data['transactions'] as List;
+
+        if (transactions.isEmpty) {
+          dataNotFound.value = true; // Set dataNotFound to true if no data
+        } else {
+          dataNotFound.value =
+              false; // Set dataNotFound to false if data is found
+        }
 
         // Simpan semua transaksi dalam allTransactions
         allTransactions.value = transactions
@@ -254,7 +257,37 @@ class ReportsController extends GetxController {
         throw Exception('Failed to load monthly report');
       }
     } catch (e) {
+      dataNotFound.value = true;
       Get.snackbar('Error', 'Terjadi kesalahan saat mengambil data: $e');
+    } finally {
+      isLoading.value = false; // Hide loading when done
+    }
+  }
+
+  Future<void> fetchData() async {
+    isLoading.value = true;
+    dataNotFound.value = false;
+
+    // Timeout jika lebih dari 20 detik
+    Future.delayed(const Duration(seconds: 20), () {
+      if (isLoading.value) {
+        Get.snackbar('Error', 'Gagal memuat data, silakan login kembali.');
+        Get.offAllNamed('/login');
+      }
+    });
+
+    try {
+      // Memanggil fetchAllTransactions dan menunggu sampai selesai
+      await fetchAllTransactions(selectedYear.value, selectedMonth.value);
+
+      // Setelah data fetch selesai, periksa apakah data ditemukan
+      // ignore: invalid_use_of_protected_member
+      if (allTransactions.value.isEmpty) {
+        dataNotFound.value = true;
+        isLoading.value = true; // Jika data kosong, set dataNotFound = true
+      }
+    } catch (e) {
+      isLoading.value = false; // Menyembunyikan loading spinner
     }
   }
 }

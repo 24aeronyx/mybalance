@@ -29,6 +29,7 @@ class HistoryController extends GetxController {
 
   Future<void> fetchLatestTransactions() async {
     isLoading.value = true;
+    dataNotFound.value = false; // Reset status
     final url = Uri.parse('${dotenv.env['BASE_URL']}/transaction/history');
 
     try {
@@ -47,30 +48,37 @@ class HistoryController extends GetxController {
         },
       );
 
-      final data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
 
-      if (data.containsKey('transactions') && data['transactions'] is List) {
-        final transactions = data['transactions'] as List;
+        if (data.containsKey('transactions') && data['transactions'] is List) {
+          final transactions = data['transactions'] as List;
 
-        if (transactions.isEmpty) {
-          dataNotFound.value = true;
+          if (transactions.isEmpty) {
+            dataNotFound.value = true; // Data tidak ditemukan
+          } else {
+            latestTransactionList.value = transactions.map((t) {
+              return Transaction(
+                title: t['title'] ?? 'Untitled',
+                category: t['category'] ?? 'Uncategorized',
+                type: t['type'] ?? 'Unknown',
+                date: DateTime.parse(
+                    t['transaction_date'] ?? DateTime.now().toString()),
+                amount: (t['amount'] ?? 0.0).toDouble(),
+              );
+            }).toList();
+
+            groupTransactionsByDate();
+          }
         } else {
-          latestTransactionList.value = transactions.map((t) {
-            return Transaction(
-              title: t['title'] ?? 'Untitled',
-              category: t['category'] ?? 'Uncategorized',
-              type: t['type'] ?? 'Unknown',
-              date: DateTime.parse(
-                  t['transaction_date'] ?? DateTime.now().toString()),
-              amount: (t['amount'] ?? 0.0).toDouble(),
-            );
-          }).toList();
-
-          groupTransactionsByDate();
+          dataNotFound.value = true; // Jika respons tidak valid
         }
+      } else {
+        dataNotFound.value = true; // Status kode tidak 200
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');
+      dataNotFound.value = true; // Kesalahan lain (network, parsing, dll.)
     } finally {
       isLoading.value = false;
     }
@@ -82,7 +90,7 @@ class HistoryController extends GetxController {
 
     List<Transaction> filteredTransactions = latestTransactionList;
 
-    // Filter based on date
+    // Filter berdasarkan tanggal
     if (selectedDate.value != null) {
       filteredTransactions = filteredTransactions.where((t) {
         return t.date.year == selectedDate.value!.year &&
@@ -91,14 +99,14 @@ class HistoryController extends GetxController {
       }).toList();
     }
 
-    // Filter based on title
+    // Filter berdasarkan judul
     if (searchTitle.value.isNotEmpty) {
       filteredTransactions = filteredTransactions.where((t) {
         return t.title.toLowerCase().contains(searchTitle.value.toLowerCase());
       }).toList();
     }
 
-    // Group transactions by date
+    // Kelompokkan transaksi berdasarkan tanggal
     Map<String, List<Transaction>> tempGroupedTransactions = {};
 
     for (var transaction in filteredTransactions) {
@@ -110,9 +118,9 @@ class HistoryController extends GetxController {
       tempGroupedTransactions[formattedDate]!.add(transaction);
     }
 
-    // Convert Map<String, List<Transaction>> to RxMap<String, RxList<Transaction>>
+    // Konversi ke RxMap
     tempGroupedTransactions.forEach((key, value) {
-      groupedTransactions[key] = value.obs; // Use .obs to convert to RxList
+      groupedTransactions[key] = value.obs;
     });
   }
 
