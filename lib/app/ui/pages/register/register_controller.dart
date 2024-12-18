@@ -6,6 +6,7 @@ import 'dart:convert';
 class RegisterController extends GetxController {
   var isLoading = false.obs; // Untuk mengatur status loading
   var isPasswordVisible = false.obs; // Variable untuk visibilitas password
+  var isButtonDisabled = false.obs;
 
   // Fungsi untuk toggle visibilitas password
   void togglePasswordVisibility() {
@@ -18,47 +19,59 @@ class RegisterController extends GetxController {
     String password,
     String fullName,
   ) async {
-    // Validasi input email
+    // Disable button when validation starts
+    isButtonDisabled.value = true;
+
+    // Validate email
     if (email.isEmpty) {
       Get.snackbar('Error', 'Email is required');
+      isButtonDisabled.value = false;
       return;
     }
     if (!email.contains('@') || !isValidEmail(email)) {
       Get.snackbar('Error', 'Please provide a valid email address');
+      isButtonDisabled.value = false;
       return;
     }
 
-    // Validasi username
+    // Validate username
     if (username.isEmpty || username.length < 3) {
       Get.snackbar('Error', 'Username must be at least 3 characters long');
+      isButtonDisabled.value = false;
       return;
     }
 
-    // Validasi password
+    // Validate password
     if (password.isEmpty) {
       Get.snackbar('Error', 'Password is required');
+      isButtonDisabled.value = false;
       return;
     }
     if (password.length < 8) {
       Get.snackbar('Error', 'Password must be at least 8 characters long');
+      isButtonDisabled.value = false;
       return;
     }
     if (!password.contains(RegExp(r'\d'))) {
       Get.snackbar('Error', 'Password must contain at least one number');
+      isButtonDisabled.value = false;
       return;
     }
     if (!password.contains(RegExp(r'[A-Z]'))) {
-      Get.snackbar('Error', 'Password must contain at least one uppercase letter');
+      Get.snackbar(
+          'Error', 'Password must contain at least one uppercase letter');
+      isButtonDisabled.value = false;
       return;
     }
 
-    // Validasi full name
+    // Validate full name
     if (fullName.isEmpty) {
       Get.snackbar('Error', 'Full name is required');
+      isButtonDisabled.value = false;
       return;
     }
 
-    isLoading.value = true; // Mengatur status loading menjadi true
+    isLoading.value = true; // Set loading to true
     final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/register');
     try {
       final response = await http.post(
@@ -72,18 +85,22 @@ class RegisterController extends GetxController {
         }),
       );
 
-      isLoading.value = false; // Mengatur status loading menjadi false setelah request selesai
+      isLoading.value = false; // Set loading to false after request
+
       if (response.statusCode == 201) {
         // ignore: unused_local_variable
         final data = jsonDecode(response.body);
         Get.snackbar('Success', 'User registered successfully');
-        Get.offNamed('/login'); // Arahkan pengguna ke halaman login setelah sukses
+        Get.offNamed('/login');
       } else {
         Get.snackbar('Error', 'Registration failed: ${response.statusCode}');
       }
     } catch (e) {
       isLoading.value = false;
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    } finally {
+      // Enable button after the process finishes
+      isButtonDisabled.value = false;
     }
   }
 

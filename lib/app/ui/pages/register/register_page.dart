@@ -140,25 +140,27 @@ class RegisterPage extends GetView<RegisterController> {
               ),
               const SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  final email = emailController.text.trim();
-                  final username = usernameController.text.trim();
-                  final password = passwordController.text.trim();
-                  final fullName = fullNameController.text.trim();
+                onPressed: controller.isButtonDisabled.value
+                    ? null // Disable the button when true
+                    : () {
+                        final email = emailController.text.trim();
+                        final username = usernameController.text.trim();
+                        final password = passwordController.text.trim();
+                        final fullName = fullNameController.text.trim();
 
-                  if (email.isNotEmpty &&
-                      username.isNotEmpty &&
-                      password.isNotEmpty) {
-                    controller.register(
-                      email,
-                      username,
-                      password,
-                      fullName,
-                    );
-                  } else {
-                    Get.snackbar('Error', 'All fields are required');
-                  }
-                },
+                        if (email.isNotEmpty &&
+                            username.isNotEmpty &&
+                            password.isNotEmpty) {
+                          controller.register(
+                            email,
+                            username,
+                            password,
+                            fullName,
+                          );
+                        } else {
+                          Get.snackbar('Error', 'All fields are required');
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   padding:
@@ -170,9 +172,10 @@ class RegisterPage extends GetView<RegisterController> {
                 child: const Text(
                   'Register',
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
