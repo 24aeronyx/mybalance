@@ -32,24 +32,43 @@ class ProfilePage extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     controller.fetchProfile();
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
-          child: AppBar(
-            backgroundColor: AppColors.secondary,
-            flexibleSpace: const SafeArea(
-              child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text(
-                    'Profile',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary),
-                  )),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: AppBar(
+          backgroundColor: AppColors.secondary,
+          flexibleSpace: const SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'Profile',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary),
+              ),
             ),
           ),
         ),
-        body: Padding(
+      ),
+      body: Obx(() {
+        // Check if the profile data is loading
+        if (controller.isLoading.value) {
+          // Show loading indicator while data is being fetched
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.dataNotFound.value) {
+          // Show message if no profile data is found
+          return const Center(
+            child: Text(
+              'No profile data found.',
+              style: TextStyle(fontSize: 16, color: AppColors.primary),
+            ),
+          );
+        }
+
+        // Content when profile data is available
+        return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
@@ -137,6 +156,8 @@ class ProfilePage extends GetView<ProfileController> {
               ),
             ],
           ),
-        ));
+        );
+      }),
+    );
   }
 }

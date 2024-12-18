@@ -10,18 +10,19 @@ class ProfileController extends GetxController {
   var phoneNumber = ''.obs;
   var address = ''.obs;
   var dataNotFound = false.obs;
+  var isLoading = false.obs; // State to track loading status
 
   // Method untuk fetch data profile
   @override
   void onInit() {
     super.onInit();
-    fetchProfile(); 
+    fetchProfile();
   }
 
   void reset() {
     fullName.value = '';
     dateOfBirth.value = '';
-    phoneNumber.value = ''; // Clear the list
+    phoneNumber.value = '';
     address.value = '';
     dataNotFound.value = false;
   }
@@ -30,6 +31,7 @@ class ProfileController extends GetxController {
     final url = Uri.parse('${dotenv.env['BASE_URL']}/profile');
 
     try {
+      isLoading.value = true; // Show loading spinner
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
 
@@ -71,6 +73,8 @@ class ProfileController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    } finally {
+      isLoading.value = false; // Hide loading spinner
     }
   }
 

@@ -39,10 +39,17 @@ class IncomeController extends GetxController {
       return;
     }
 
+    // Validate that amount is greater than 0
+    if (amount.value <= 0) {
+      Get.snackbar('Error', 'Amount must be greater than 0.');
+      return;
+    }
+
     try {
       // Retrieve token from SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('token');  // Replace 'token' with your actual key
+      String? token =
+          prefs.getString('token'); // Replace 'token' with your actual key
 
       if (token == null) {
         Get.snackbar('Error', 'Token not found. Please login again.');
@@ -54,7 +61,8 @@ class IncomeController extends GetxController {
         Uri.parse('${dotenv.env['BASE_URL']}/transaction/income'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',  // Add token in the Authorization header
+          'Authorization':
+              'Bearer $token', // Add token in the Authorization header
         },
         body: jsonEncode({
           'amount': amount.value,
@@ -68,7 +76,8 @@ class IncomeController extends GetxController {
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Income added successfully');
       } else {
-        Get.snackbar('Error', 'Failed to add income. Status Code: ${response.statusCode}');
+        Get.snackbar('Error',
+            'Failed to add income. Status Code: ${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');
