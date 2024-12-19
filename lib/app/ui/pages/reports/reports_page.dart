@@ -13,14 +13,16 @@ class ReportsPage extends GetView<ReportsController> {
 
   // Function to format numbers in Indonesian style (k, jt, m, t)
   String formatYAxisLabel(double value) {
-    if (value >= 1e9) {
-      return '${(value / 1e9).toStringAsFixed(1)} t'; // trillion
+    if (value >= 1e12) {
+      return '${(value / 1e12).toStringAsFixed(1)} t'; // Triliun
+    } else if (value >= 1e9) {
+      return '${(value / 1e9).toStringAsFixed(1)} m'; // Miliar
     } else if (value >= 1e6) {
-      return '${(value / 1e6).toStringAsFixed(1)} jt'; // million
+      return '${(value / 1e6).toStringAsFixed(1)} jt'; // Juta
     } else if (value >= 1e3) {
-      return '${(value / 1e3).toStringAsFixed(1)} k'; // thousand
+      return '${(value / 1e3).toStringAsFixed(1)} k'; // Ribu
     } else {
-      return value.toStringAsFixed(0); // no formatting for smaller numbers
+      return value.toStringAsFixed(0); // Tidak diformat untuk angka kecil
     }
   }
 

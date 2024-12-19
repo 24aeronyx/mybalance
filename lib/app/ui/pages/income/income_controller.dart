@@ -42,8 +42,19 @@ class IncomeController extends GetxController {
         return;
       }
 
-      if (amount.value <= 0) {
-        Get.snackbar('Error', 'Amount must be greater than 0.');
+      if (amount.value <= 0 || amount.value > 1000000000) {
+        Get.snackbar('Error',
+            'Amount must be greater than 0 and less than or equal to 1 billion.');
+        return;
+      }
+
+      if (title.value.length > 20) {
+        Get.snackbar('Error', 'Title must not exceed 20 characters.');
+        return;
+      }
+
+      if (description.value.length > 30) {
+        Get.snackbar('Error', 'Description must not exceed 30 characters.');
         return;
       }
 
@@ -75,7 +86,7 @@ class IncomeController extends GetxController {
       // Cek hasil
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Income added successfully');
-        homeController.fetchLatestTransactions(); 
+        homeController.fetchLatestTransactions();
         homeController.fetchProfile();
       } else {
         Get.snackbar('Error',
