@@ -11,6 +11,7 @@ class IncomeController extends GetxController {
   var title = ''.obs;
   var category = ''.obs;
   var date = ''.obs;
+  var isButtonDisabled = false.obs;
 
   // Valid categories
   final validCategories = [
@@ -26,43 +27,38 @@ class IncomeController extends GetxController {
 
   // API request to add income
   Future<void> addIncome() async {
-    // Validate category
-    if (!validCategories.contains(category.value)) {
-      Get.snackbar('Error', 'Invalid category selected');
-      return;
-    }
-
-    // Validate date format (YYYY-MM-DD)
-    final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
-    if (!dateRegex.hasMatch(date.value)) {
-      Get.snackbar('Error', 'Invalid date format. Please use YYYY-MM-DD.');
-      return;
-    }
-
-    // Validate that amount is greater than 0
-    if (amount.value <= 0) {
-      Get.snackbar('Error', 'Amount must be greater than 0.');
-      return;
-    }
-
     try {
-      // Retrieve token from SharedPreferences
+      // Validasi input
+      if (!validCategories.contains(category.value)) {
+        Get.snackbar('Error', 'Invalid category selected');
+        return;
+      }
+
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(date.value)) {
+        Get.snackbar('Error', 'Invalid date format. Please use YYYY-MM-DD.');
+        return;
+      }
+
+      if (amount.value <= 0) {
+        Get.snackbar('Error', 'Amount must be greater than 0.');
+        return;
+      }
+
+      // Ambil token
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token =
-          prefs.getString('token'); // Replace 'token' with your actual key
+      String? token = prefs.getString('token');
 
       if (token == null) {
         Get.snackbar('Error', 'Token not found. Please login again.');
         return;
       }
 
-      // Send the request with the token in the Authorization header
+      // Kirim request
       final response = await http.post(
         Uri.parse('${dotenv.env['BASE_URL']}/transaction/income'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer $token', // Add token in the Authorization header
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
           'amount': amount.value,
@@ -73,8 +69,10 @@ class IncomeController extends GetxController {
         }),
       );
 
+      // Cek hasil
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Income added successfully');
+        fetchLatestTransactions(); // Perbarui transaksi terbaru
       } else {
         Get.snackbar('Error',
             'Failed to add income. Status Code: ${response.statusCode}');

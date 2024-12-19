@@ -101,7 +101,8 @@ class OutcomePage extends GetView<OutcomeController> {
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+                    lastDate:
+                        DateTime.now().add(const Duration(days: 365 * 10)),
                   );
                   if (pickedDate != null) {
                     controller.date.value =
@@ -129,30 +130,40 @@ class OutcomePage extends GetView<OutcomeController> {
 
               const SizedBox(height: 30),
 
-              // Add Outcome Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    controller.addOutcome();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              Obx(() => SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: controller.isButtonDisabled.value
+                          ? null
+                          : () async {
+                              controller.isButtonDisabled.value =
+                                  true; // Disable tombol
+                              await controller.addOutcome();
+                              controller.isButtonDisabled.value =
+                                  false; // Re-enable tombol
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: controller.isButtonDisabled.value
+                          ? const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text(
+                              "Add Outcome",
+                              style: TextStyle(
+                                fontSize: FontSize.large,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
-                  ),
-                  child: const Text(
-                    "Add Outcome",
-                    style: TextStyle(
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+                  )),
             ],
           ),
         ),

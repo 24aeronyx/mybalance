@@ -101,7 +101,8 @@ class IncomePage extends GetView<IncomeController> {
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1900),
-                    lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+                    lastDate:
+                        DateTime.now().add(const Duration(days: 365 * 10)),
                   );
                   if (pickedDate != null) {
                     controller.date.value =
@@ -130,29 +131,40 @@ class IncomePage extends GetView<IncomeController> {
               const SizedBox(height: 30),
 
               // Add Income Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    controller.addIncome();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              Obx(() => SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: controller.isButtonDisabled.value
+                          ? null
+                          : () async {
+                              controller.isButtonDisabled.value =
+                                  true; // Disable button
+                              await controller.addIncome();
+                              controller.isButtonDisabled.value =
+                                  false; // Re-enable button
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: controller.isButtonDisabled.value
+                          ? const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text(
+                              "Add Income",
+                              style: TextStyle(
+                                fontSize: FontSize.large,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
-                  ),
-                  child: const Text(
-                    "Add Income",
-                    style: TextStyle(
-                      fontSize: FontSize.large,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+                  )),
             ],
           ),
         ),
