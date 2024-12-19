@@ -64,16 +64,6 @@ class ReportsPage extends GetView<ReportsController> {
             // Show loading indicator while data is being fetched
             return const Center(child: CircularProgressIndicator());
           }
-
-          if (controller.dataNotFound.value) {
-            // Show message when no data is found
-            return const Center(
-              child: Text(
-                'No transactions found.',
-                style: TextStyle(fontSize: 16, color: AppColors.primary),
-              ),
-            );
-          }
           return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(children: [
@@ -107,7 +97,7 @@ class ReportsPage extends GetView<ReportsController> {
                                         .format(controller.totalIncome.value),
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: FontSize.heading,
+                                  fontSize: FontSize.large,
                                   fontWeight: FontWeight.w600,
                                 ),
                               );
@@ -142,7 +132,7 @@ class ReportsPage extends GetView<ReportsController> {
                                         .format(controller.totalOutcome.value),
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: FontSize.heading,
+                                  fontSize: FontSize.large,
                                   fontWeight: FontWeight.w600,
                                 ),
                               );
