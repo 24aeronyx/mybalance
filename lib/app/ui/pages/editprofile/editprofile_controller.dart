@@ -13,6 +13,7 @@ class EditProfileController extends GetxController {
   var phoneNumber = ''.obs;
   var address = ''.obs;
   var dataNotFound = false.obs;
+  var isButtonDisabled = false.obs;
 
   var fullNameController = TextEditingController();
   var dobController = TextEditingController();
@@ -78,7 +79,6 @@ class EditProfileController extends GetxController {
           dobController.text = dateOfBirth.value;
           phoneController.text = phoneNumber.value;
           addressController.text = address.value;
-        
         } else {
           dataNotFound.value = true;
         }
@@ -158,6 +158,7 @@ class EditProfileController extends GetxController {
     required String address,
   }) async {
     if (!validateAll()) {
+      isButtonDisabled.value = false; // Pastikan tombol diaktifkan kembali
       return false;
     }
 
@@ -169,6 +170,7 @@ class EditProfileController extends GetxController {
 
       if (token == null) {
         handleInvalidToken();
+        isButtonDisabled.value = false; // Aktifkan kembali tombol
         return false;
       }
 
@@ -194,10 +196,12 @@ class EditProfileController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Error occurred while updating profile: $e');
       return false;
+    } finally {
+      isButtonDisabled.value = false; // Re-enable button after operation
     }
   }
 
-   Future<void> refreshMainProfile() async {
+  Future<void> refreshMainProfile() async {
     await profileController.fetchProfile();
   }
 }

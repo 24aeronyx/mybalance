@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginController extends GetxController {
   var isPasswordVisible = false.obs;
   var isLoading = false.obs;
+  var isButtonDisabled = false.obs;
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -32,7 +33,10 @@ class LoginController extends GetxController {
       return;
     }
 
+    // Disable button and show loading indicator
+    isButtonDisabled.value = true;
     isLoading.value = true;
+
     final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/login');
     try {
       final response = await http.post(
@@ -45,12 +49,12 @@ class LoginController extends GetxController {
       );
 
       isLoading.value = false;
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['token'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', data['token']);
-
           Get.offAllNamed('/main');
         } else {
           Get.snackbar('Error', 'Login berhasil tetapi token tidak ditemukan');
@@ -61,8 +65,11 @@ class LoginController extends GetxController {
         Get.snackbar('Error', 'Login gagal: ${response.statusCode}');
       }
     } catch (e) {
-      isLoading.value = false;
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    } finally {
+      // Always re-enable button
+      isLoading.value = false;
+      isButtonDisabled.value = false;
     }
   }
 }

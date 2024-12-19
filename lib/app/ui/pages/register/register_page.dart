@@ -139,45 +139,50 @@ class RegisterPage extends GetView<RegisterController> {
                 ),
               ),
               const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: controller.isButtonDisabled.value
-                    ? null // Disable the button when true
-                    : () {
-                        final email = emailController.text.trim();
-                        final username = usernameController.text.trim();
-                        final password = passwordController.text.trim();
-                        final fullName = fullNameController.text.trim();
+              Obx(() => ElevatedButton(
+                    onPressed: controller.isButtonDisabled.value
+                        ? null // Disable the button when true
+                        : () async {
+                            final email = emailController.text.trim();
+                            final username = usernameController.text.trim();
+                            final password = passwordController.text.trim();
+                            final fullName = fullNameController.text.trim();
 
-                        if (email.isNotEmpty &&
-                            username.isNotEmpty &&
-                            password.isNotEmpty) {
-                          controller.register(
-                            email,
-                            username,
-                            password,
-                            fullName,
-                          );
-                        } else {
-                          Get.snackbar('Error', 'All fields are required');
-                        }
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Register',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                            if (email.isNotEmpty &&
+                                username.isNotEmpty &&
+                                password.isNotEmpty) {
+                              // Disable the button
+                              controller.isButtonDisabled.value = true;
+
+                              // Show loading indicator
+                              await controller.register(
+                                  email, username, password, fullName);
+                            } else {
+                              Get.snackbar('Error', 'All fields are required');
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: controller.isButtonDisabled.value
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text(
+                            'Register',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                  )),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

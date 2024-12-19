@@ -71,7 +71,9 @@ class RegisterController extends GetxController {
       return;
     }
 
-    isLoading.value = true; // Set loading to true
+    // Set loading to true and disable button to prevent multiple clicks
+    isLoading.value = true;
+
     final url = Uri.parse('${dotenv.env['BASE_URL']}/auth/register');
     try {
       final response = await http.post(
@@ -85,21 +87,22 @@ class RegisterController extends GetxController {
         }),
       );
 
-      isLoading.value = false; // Set loading to false after request
+      // Hide loading indicator after request is finished
+      isLoading.value = false;
 
       if (response.statusCode == 201) {
-        // ignore: unused_local_variable
-        final data = jsonDecode(response.body);
         Get.snackbar('Success', 'User registered successfully');
         Get.offNamed('/login');
       } else {
+        // If registration fails, display error and re-enable button
         Get.snackbar('Error', 'Registration failed: ${response.statusCode}');
       }
     } catch (e) {
+      // Handle error case
       isLoading.value = false;
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
     } finally {
-      // Enable button after the process finishes
+      // Always re-enable the button after operation
       isButtonDisabled.value = false;
     }
   }

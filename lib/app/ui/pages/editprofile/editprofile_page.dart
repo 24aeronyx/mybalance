@@ -102,57 +102,69 @@ class EditprofilePage extends GetView<EditProfileController> {
                 const SizedBox(height: 30),
 
                 // Save Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      String fullName = controller.fullNameController.text;
-                      String dateOfBirth = controller.dobController.text;
-                      String phoneNumber = controller.phoneController.text;
-                      String address = controller.addressController.text;
+                Obx(() => SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: controller.isButtonDisabled.value
+            ? null
+            : () async {
+                String fullName = controller.fullNameController.text;
+                String dateOfBirth = controller.dobController.text;
+                String phoneNumber = controller.phoneController.text;
+                String address = controller.addressController.text;
 
-                      controller
-                          .updateProfile(
-                        fullName: fullName,
-                        dateOfBirth: dateOfBirth,
-                        phoneNumber: phoneNumber,
-                        address: address,
-                      )
-                          .then((success) {
-                        if (success) {
-                          Get.snackbar(
-                            'Success',
-                            'Profile updated successfully',
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                          );
-                        } else {
-                          Get.snackbar(
-                            'Error',
-                            'Failed to update profile',
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
-                        }
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      "Save Changes",
-                      style: TextStyle(
-                        fontSize: FontSize.large,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                // Disable button and initiate update
+                controller.isButtonDisabled.value = true;
+
+                bool success = await controller.updateProfile(
+                  fullName: fullName,
+                  dateOfBirth: dateOfBirth,
+                  phoneNumber: phoneNumber,
+                  address: address,
+                );
+
+                if (success) {
+                  Get.snackbar(
+                    'Success',
+                    'Profile updated successfully',
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                  await controller.refreshMainProfile(); // Refresh main profile data
+                } else {
+                  Get.snackbar(
+                    'Error',
+                    'Failed to update profile',
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+
+                // Re-enable button after operation
+                controller.isButtonDisabled.value = false;
+              },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: controller.isButtonDisabled.value
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              )
+            : const Text(
+                "Save Changes",
+                style: TextStyle(
+                  fontSize: FontSize.large,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
+              ),
+      ),
+    )),
+
               ],
             ),
           );

@@ -105,33 +105,41 @@ class LoginPage extends GetView<LoginController> {
                     obscureText: !controller.isPasswordVisible.value,
                   )),
               const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  final email = emailController.text.trim();
-                  final password = passwordController.text.trim();
-                  if (email.isNotEmpty && password.isNotEmpty) {
-                    controller.login(
-                        email, password); // Call login function from controller
-                  } else {
-                    Get.snackbar('Error', 'Email and password are required');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                ),
-              ),
+              Obx(() => ElevatedButton(
+                    onPressed: controller.isButtonDisabled.value
+                        ? null
+                        : () async {
+                            final email = emailController.text.trim();
+                            final password = passwordController.text.trim();
+                            if (email.isNotEmpty && password.isNotEmpty) {
+                              controller.login(email, password);
+                            } else {
+                              Get.snackbar(
+                                  'Error', 'Email and password are required');
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: controller.isButtonDisabled.value
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                  )),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -149,8 +157,8 @@ class LoginPage extends GetView<LoginController> {
                       Get.toNamed('/register'); // Navigate to the register page
                     },
                     style: TextButton.styleFrom(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 2), // Menghapus padding default tombol
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2), // Menghapus padding default tombol
                       minimumSize:
                           const Size(0, 0), // Menghapus ukuran minimum tombol
                     ),
