@@ -162,6 +162,21 @@ class EditProfileController extends GetxController {
       return false;
     }
 
+    // Cek apakah ada perubahan data
+    if (fullName == this.fullName.value &&
+        dateOfBirth == this.dateOfBirth.value &&
+        phoneNumber == this.phoneNumber.value &&
+        address == this.address.value) {
+      Get.snackbar(
+        'Info',
+        'No changes detected. Profile remains the same.',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      isButtonDisabled.value = false; // Pastikan tombol diaktifkan kembali
+      return false;
+    }
+
     final url = Uri.parse('${dotenv.env['BASE_URL']}/profile');
 
     try {
@@ -189,6 +204,13 @@ class EditProfileController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        fetchProfile();
         return true;
       } else {
         throw Exception('Failed to update profile: ${response.statusCode}');

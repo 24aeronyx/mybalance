@@ -15,10 +15,9 @@ class EditprofilePage extends GetView<EditProfileController> {
         title: const Text(
           "Edit Profile",
           style: TextStyle(
-            fontSize: FontSize.extraLarge,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary
-          ),
+              fontSize: FontSize.extraLarge,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary),
         ),
         backgroundColor: AppColors.secondary,
       ),
@@ -67,7 +66,11 @@ class EditprofilePage extends GetView<EditProfileController> {
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: AppColors.primary),
                         ),
-                        suffixIcon: Icon(BoxIcons.bx_calendar, size: 30, color: AppColors.primary,),
+                        suffixIcon: Icon(
+                          BoxIcons.bx_calendar,
+                          size: 30,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                   ),
@@ -103,68 +106,63 @@ class EditprofilePage extends GetView<EditProfileController> {
 
                 // Save Button
                 Obx(() => SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: controller.isButtonDisabled.value
-            ? null
-            : () async {
-                String fullName = controller.fullNameController.text;
-                String dateOfBirth = controller.dobController.text;
-                String phoneNumber = controller.phoneController.text;
-                String address = controller.addressController.text;
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: controller.isButtonDisabled.value
+                            ? null
+                            : () async {
+                                String fullName =
+                                    controller.fullNameController.text;
+                                String dateOfBirth =
+                                    controller.dobController.text;
+                                String phoneNumber =
+                                    controller.phoneController.text;
+                                String address =
+                                    controller.addressController.text;
 
-                // Disable button and initiate update
-                controller.isButtonDisabled.value = true;
+                                // Disable button and initiate update
+                                controller.isButtonDisabled.value = true;
 
-                bool success = await controller.updateProfile(
-                  fullName: fullName,
-                  dateOfBirth: dateOfBirth,
-                  phoneNumber: phoneNumber,
-                  address: address,
-                );
+                                // Jalankan update profile
+                                bool success = await controller.updateProfile(
+                                  fullName: fullName,
+                                  dateOfBirth: dateOfBirth,
+                                  phoneNumber: phoneNumber,
+                                  address: address,
+                                );
 
-                if (success) {
-                  Get.snackbar(
-                    'Success',
-                    'Profile updated successfully',
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                  );
-                  await controller.refreshMainProfile(); // Refresh main profile data
-                } else {
-                  Get.snackbar(
-                    'Error',
-                    'Failed to update profile',
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
-                  );
-                }
+                                // Refresh profile hanya jika update berhasil
+                                if (success) {
+                                  await controller.refreshMainProfile();
+                                }
 
-                // Re-enable button after operation
-                controller.isButtonDisabled.value = false;
-              },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: controller.isButtonDisabled.value
-            ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              )
-            : const Text(
-                "Save Changes",
-                style: TextStyle(
-                  fontSize: FontSize.large,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-      ),
-    )),
-
+                                // Re-enable button setelah operasi selesai (jika belum dilakukan di controller)
+                                if (controller.isButtonDisabled.value) {
+                                  controller.isButtonDisabled.value = false;
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: controller.isButtonDisabled.value
+                            ? const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : const Text(
+                                "Save Changes",
+                                style: TextStyle(
+                                  fontSize: FontSize.large,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    )),
               ],
             ),
           );

@@ -1,6 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:mybalance/app/models/transaction_model.dart';
+import 'package:mybalance/app/ui/pages/home/home_controller.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +14,7 @@ class OutcomeController extends GetxController {
   var category = ''.obs;
   var date = ''.obs;
   var isButtonDisabled = false.obs;
+  final homeController = Get.find<HomeController>();
 
   // Valid categories (for Outcome)
   final validCategories = [
@@ -72,7 +75,7 @@ class OutcomeController extends GetxController {
       // Cek hasil
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Outcome added successfully');
-        fetchLatestTransactions(); // Perbarui daftar transaksi
+        homeController.fetchLatestTransactions();
       } else {
         Get.snackbar('Error',
             'Failed to add outcome. Status Code: ${response.statusCode}');
@@ -81,73 +84,4 @@ class OutcomeController extends GetxController {
       Get.snackbar('Error', 'An error occurred: $e');
     }
   }
-
-  // Fetch latest transactions
-  Future<void> fetchLatestTransactions() async {
-    final url = Uri.parse('${dotenv.env['BASE_URL']}/transaction/history');
-
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('token');
-
-      if (token == null) {
-        handleInvalidToken();
-        return;
-      }
-
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final transactions = data['transactions'] as List;
-
-        if (transactions.isNotEmpty) {
-          latestTransactionList.value = transactions
-              .map((t) {
-                return Transaction(
-                  title: t['title'],
-                  category: t['category'],
-                  type: t['type'],
-                  date: DateTime.parse(t['transaction_date']),
-                  amount: t['amount'].toDouble(),
-                );
-              })
-              .take(10)
-              .toList();
-        } else {
-          dataNotFound.value = true;
-        }
-      } else {
-        throw Exception('Failed to load transactions: ${response.statusCode}');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred: $e');
-    }
-  }
-
-  void handleInvalidToken() {
-    Get.snackbar('Error', 'Token is invalid. Please login again.');
-    Get.offAllNamed('/login');
-  }
-}
-
-class Transaction {
-  final String title;
-  final String category;
-  final String type;
-  final DateTime date;
-  final double amount;
-
-  Transaction({
-    required this.title,
-    required this.category,
-    required this.type,
-    required this.date,
-    required this.amount,
-  });
 }
