@@ -76,6 +76,7 @@ class OutcomeController extends GetxController {
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Outcome added successfully');
         homeController.fetchLatestTransactions();
+         homeController.fetchProfile();
       } else {
         Get.snackbar('Error',
             'Failed to add outcome. Status Code: ${response.statusCode}');

@@ -75,7 +75,8 @@ class IncomeController extends GetxController {
       // Cek hasil
       if (response.statusCode == 201) {
         Get.snackbar('Success', 'Income added successfully');
-        homeController.fetchLatestTransactions(); // Perbarui transaksi terbaru
+        homeController.fetchLatestTransactions(); 
+        homeController.fetchProfile();
       } else {
         Get.snackbar('Error',
             'Failed to add income. Status Code: ${response.statusCode}');
